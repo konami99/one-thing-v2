@@ -40,9 +40,9 @@ const SignUp = () => {
       email: email,
       password: password,
       options: {
-          data: {
-              name
-          },
+        data: {
+          name
+        },
       },
     });
 

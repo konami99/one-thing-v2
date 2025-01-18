@@ -23,8 +23,8 @@ const Login = () => {
 
   const onSubmit = async ()=>{
     if(!emailRef.current || !passwordRef.current){
-        Alert.alert('Login', "Please fill all the fields!");
-        return;
+      Alert.alert('Login', "Please fill all the fields!");
+      return;
     }
 
     let email = emailRef.current.trim();
