@@ -9,71 +9,13 @@ import Button from '../../components/Button'
 import { ScrollView, Pressable } from "react-native"
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { useRef, useState } from "react"
-import { Modal, FlatList, TextInput } from 'react-native'
+import { Modal, FlatList, TextInput } from 'react-native';
 import { TrueSheet } from "@lodev09/react-native-true-sheet"
-import { Picker } from '@react-native-picker/picker';
-
-type ItemData = {
-  id: number,
-  type: string,
-  title: string,
-}
+import HabitFormSheet from "@/components/HabitFormSheet"
 
 const Home = () => {
   const { user } = useAuth();
   const sheet = useRef<TrueSheet>(null)
-  const [frequency, setFrequency] = useState();
-  const [habit, setHabit] = useState('');
-
-  const data: ItemData[] = [
-    {
-      id: 0,
-      type: 'TextInput',
-      title: 'Activity',
-    },
-    {
-      id: 1,
-      type: 'Text',
-      title: 'Drink water',
-    },
-    {
-      id: 2,
-      type: 'Text',
-      title: 'Brush teeth',
-    },
-    {
-      id: 3,
-      type: 'Text',
-      title: 'Study',
-    },
-    {
-      id: 4,
-      type: 'Text',
-      title: 'Make bed',
-    },
-    {
-      id: 5,
-      type: 'Text',
-      title: 'Walk',
-    },
-  ];
-
-  const setHabitName = (name: string) => {
-    console.log(name)
-    setHabit(name);
-  }
-
-  const renderItem = ({item}: {item: ItemData}) => (
-    ? <TextInput
-      className="bg-slate-100 mr-4 rounded-lg w-36 h-14 pl-2 text-xl"
-      placeholder={item.title}
-    />
-    : <Pressable
-        onPress={ () => setHabitName(item.title) }
-        className={`border-4 border-green-500 mr-4 rounded-full w-36 h-14 flex justify-center items-center ${ habit === item.title ? 'bg-green-500' : 'white' }`}>
-      <Text className="text-xl">{item.title}</Text>
-    </Pressable>
-  )
 
   const present = async () => {
     await sheet.current?.present();
@@ -125,44 +67,9 @@ const Home = () => {
       <View style={styles.container}>
         <View style={styles.titleSection}>
           <Text style={styles.title}>Habits</Text>
-          <TrueSheet
-            ref={sheet}
-            sizes={['large']}
-            cornerRadius={24}
-            style={{"padding": 24}}
-          >
-            <Text className="mb-[15px] text-4xl">I want to</Text>
-            <FlatList
-              data={data}
-              horizontal
-              renderItem={renderItem}
-              showsHorizontalScrollIndicator={false}
-            />
-            <View className="flex flex-row items-center mt-4">
-              <View className="w-24 bg-green-500 rounded-xl mr-2">
-                <Picker
-                  selectedValue={frequency}
-                  onValueChange={(itemValue, itemIndex) =>
-                    setFrequency(itemValue)
-                  }>
-                  <Picker.Item label="1" value="1" />
-                  <Picker.Item label="2" value="2" />
-                  <Picker.Item label="3" value="3" />
-                </Picker>
-              </View>
-              <Text className="text-2xl">time a day.</Text>
-            </View>
-            {/*
-            <Button 
-              textStyle={"bold"}
-              title="Getting Started" 
-              buttonStyle={{marginHorizontal: wp(3)}} 
-              onPress={onSubmit}
-            />
-            
-            <Button textStyle={"bold"} buttonStyle={{marginHorizontal: wp(3)}} onPress={dismiss} title="Dismiss" />
-            */}
-            </TrueSheet>
+          
+          <HabitFormSheet sheet={sheet} />
+
           <Pressable onPress={present}>
             <FontAwesome5 name="plus" size={24} color="black" />
           </Pressable>
