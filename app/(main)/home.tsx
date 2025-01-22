@@ -14,7 +14,6 @@ import { TrueSheet } from "@lodev09/react-native-true-sheet"
 import HabitFormSheet from "@/components/HabitFormSheet"
 
 const Home = () => {
-  const { user } = useAuth();
   const sheet = useRef<TrueSheet>(null)
 
   const present = async () => {
@@ -32,43 +31,13 @@ const Home = () => {
     }
   }
 
-  const onSubmit = async() => {
-    //console.log(user.id)
-    /*
-    const { data, error } = await supabase
-      .from('Goal')
-      .select()
-      .eq('userId', user.id)
-    */
-    console.log('insert')
-    const { data, error } = await supabase
-      .from('Goal')
-      .insert({
-        name: 'Jump',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        frequency: 3,
-        minCount: 3,
-        minUnit: 'pages',
-        frequencyRange: 1,
-        streak: 0,
-        count: 0,
-        color: 'white',
-        enabled: true,
-        userId: user.id,
-      })
-      .select()
-    console.log(error)
-    console.log(data)
-  }
-
   return (
     <ScreenWrapper bg={"white"}>
       <View style={styles.container}>
         <View style={styles.titleSection}>
           <Text style={styles.title}>Habits</Text>
           
-          <HabitFormSheet sheet={sheet} />
+          <HabitFormSheet sheet={sheet} dismiss={dismiss} />
 
           <Pressable onPress={present}>
             <FontAwesome5 name="plus" size={24} color="black" />

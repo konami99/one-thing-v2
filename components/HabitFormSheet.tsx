@@ -6,6 +6,8 @@ import { useRef, useState } from "react"
 import { Modal, Button, FlatList, TextInput } from 'react-native'
 import { TrueSheet } from "@lodev09/react-native-true-sheet"
 import { Picker } from '@react-native-picker/picker';
+import { supabase } from "../lib/supabase";
+import { useAuth } from "../contexts/AuthContext"
 
 type ItemData = {
   id: number,
@@ -15,13 +17,24 @@ type ItemData = {
 
 type HabitFormSheetProps = {
   sheet: React.RefObject<TrueSheet>;
+  dismiss: Function,
 };
 
-const HabitFormSheet = ({ sheet }: HabitFormSheetProps) => {
-  const [frequency, setFrequency] = useState();
+const HabitFormSheet = ({ sheet, dismiss }: HabitFormSheetProps) => {
+  const { user } = useAuth();
+
   const [habit, setHabit] = useState('');
   const [activityInput, setActivityInput] = useState('');
-  const [buttonText, setButtonText] = useState('SKIP')
+  // "2" times
+  const [frequency, setFrequency] = useState(1);
+  // in "11" days
+  const [frequencyRange, setFrequencyRange] = useState(1);
+  // "10"
+  const [minCount, setMinCount] = useState<number | null>(null)
+  // "pages"
+  const [minUnit, setMinUnit] = useState<string | null>(null)
+  
+  const [buttonText, setButtonText] = useState('CREATE')
 
   const data: ItemData[] = [
     {
@@ -56,8 +69,56 @@ const HabitFormSheet = ({ sheet }: HabitFormSheetProps) => {
     },
   ];
 
-  const onSubmit = async() => {
+  const resetForm = () => {
 
+  }
+
+  const timePluralConverter = () => {
+    return frequency > 1 ? 'times' : 'time';
+  }
+
+  const createHabit = async () => {
+    const { error } = await supabase
+      .from('Goal')
+      .insert({
+        name: habit,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        frequency: frequency,
+        frequencyRange: 1,
+        minCount: minCount,
+        minUnit: minUnit,
+        streak: 0,
+        count: 0,
+        color: 'white',
+        enabled: true,
+        userId: user.id,
+      })
+
+    return error;
+  }
+
+  const onCreate = async() => {
+    console.log('SUBMIT')
+    console.log('habit', habit)
+    console.log('frequency', frequency);
+    console.log('frequencyRange', frequencyRange)
+    console.log('minCount', minCount);
+    console.log('minUnit', minUnit)
+
+    if (habit.trim() === '') {
+      console.log('habit is empty')
+    } else {
+      console.log('push to supa')
+      const error = await createHabit(); 
+      console.log('error', error)
+      if (error) {
+
+      } else {
+        resetForm();
+        await dismiss();
+      }
+    }
   }
 
   const renderItem = ({item}: {item: ItemData}) => {
@@ -67,6 +128,7 @@ const HabitFormSheet = ({ sheet }: HabitFormSheetProps) => {
         setHabit(input);
         setActivityInput(input);
       }}
+      maxLength={30}
       value={activityInput}
       className="bg-slate-100 mr-4 rounded-lg w-36 h-14 pl-2 text-xl"
       placeholder={item.title}
@@ -90,7 +152,7 @@ const HabitFormSheet = ({ sheet }: HabitFormSheetProps) => {
       cornerRadius={24}
       style={{"padding": 24}}
     >
-      <Text className="mb-[15px] text-4xl">I want to</Text>
+      <Text className="mb-[15px] text-4xl">I want to *</Text>
       <FlatList
         data={data}
         horizontal
@@ -109,7 +171,7 @@ const HabitFormSheet = ({ sheet }: HabitFormSheetProps) => {
             <Picker.Item label="3" value="3" />
           </Picker>
         </View>
-        <Text className="text-2xl">time a day.</Text>
+        <Text className="text-2xl">{ timePluralConverter() } a day *</Text>
       </View>
 
       <View className="mt-8">
@@ -117,14 +179,19 @@ const HabitFormSheet = ({ sheet }: HabitFormSheetProps) => {
         <Text className="mb-[15px] text-4xl leading-none">smallest unit</Text>
         <View>
           <TextInput
-            value={activityInput}
+            value={minCount?.toString()}
+            maxLength={3}
+            keyboardType="numeric"
+            onChangeText={ (input) => setMinCount(parseInt(input)) }
             className="bg-slate-100 mr-4 rounded-lg w-full h-14 pl-2 text-xl"
             placeholder={ 'i.e. 2' }
           />
         </View>
         <View className="mt-3">
           <TextInput
-            value={activityInput}
+            value={minUnit?.toString()}
+            maxLength={20}
+            onChangeText={ (input) => setMinUnit(input) }
             className="bg-slate-100 mr-4 rounded-lg w-full h-14 pl-2 text-xl"
             placeholder={ 'i.e. Minutes' }
           />
@@ -132,8 +199,8 @@ const HabitFormSheet = ({ sheet }: HabitFormSheetProps) => {
       </View>
 
       <View className="flex flex-row items-center justify-center mt-8">
-        <Pressable className="flex flex-row items-center justify-center h-14 w-1/3 rounded-full bg-green-500" onPress={onSubmit}>
-          <Text className='text-white text-lg font-bold'>CREATE</Text>
+        <Pressable className="flex flex-row items-center justify-center h-14 w-1/3 rounded-full bg-green-500" onPress={onCreate}>
+          <Text className='text-white text-lg font-bold'>{ buttonText }</Text>
         </Pressable>
       </View>
 
