@@ -32,7 +32,6 @@ const Home = () => {
   
   const present = async () => {
     await sheet.current?.present();
-    setUpdateKey((prevKey) => prevKey + 1);
   }
 
   const dismiss = async () => {
@@ -66,7 +65,7 @@ const Home = () => {
         </View>
         <View className="flex flex-row justify-between">
           <Text>{ test() }</Text>
-          <View className="flex flex-row justify-between w-[60%] mr-4">
+          <View className="flex flex-row justify-between w-[63%] mr-8">
             {dates.map((date, index) => (
               <View key={index}>
                 <Text>{ date }</Text>
@@ -75,9 +74,24 @@ const Home = () => {
             ))}
           </View>
         </View>
-        <ScrollView>
-          <View style={styles.habitItem}>
-            <Text>habit 1</Text>
+        <ScrollView className="mt-4">
+          <View className="bg-green-500 rounded-xl h-32 flex flex-row justify-between mr-4">
+            <View className="ml-4">
+              <View className="mt-6">
+                <Text>15 x</Text>
+              </View>
+              <View>
+                <Text>Read</Text>
+                <Text>10 pages</Text>
+              </View>
+            </View>
+            <View className="flex flex-row justify-between w-[65%] mr-4">
+              {dates.map((date, index) => (
+                <Pressable className="mt-6" onPress={() => console.log('pressed')}>
+                  <View className="h-4 w-4 rounded-lg border-2 border-black-500" />
+                </Pressable>
+              ))}
+            </View>
           </View>
         </ScrollView>
       </View>
@@ -86,12 +100,6 @@ const Home = () => {
 }
 
 const styles = StyleSheet.create({
-  inputItem: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    
-  },
   scrollViewItem: {
     borderWidth: 1,
     marginRight: 15,
