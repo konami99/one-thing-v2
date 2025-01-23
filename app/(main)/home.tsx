@@ -3,25 +3,41 @@ import ScreenWrapper from "../../components/ScreenWrapper"
 import { useAuth } from "../../contexts/AuthContext"
 import { supabase } from "../../lib/supabase"
 import { Alert, StyleSheet, Text, View } from "react-native"
-import { hp, wp } from '../../helpers/common'
+import { hp, wp, getDaysOfCurrentWeek, getCurrentMonth, days } from '../../helpers/common'
 import { theme } from '../../constants/theme'
 import Button from '../../components/Button'
 import { ScrollView, Pressable } from "react-native"
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Modal, FlatList, TextInput } from 'react-native';
 import { TrueSheet } from "@lodev09/react-native-true-sheet"
 import HabitFormSheet from "@/components/HabitFormSheet"
 
 const Home = () => {
   const sheet = useRef<TrueSheet>(null)
+  const [updateKey, setUpdateKey] = useState(0)
 
+  const dates = getDaysOfCurrentWeek();
+  
+  const getGoalsAndCompletes = async () => {
+    let { data, error } = await supabase.rpc('getgoalsandcompletes')
+    if (error) console.error(error)
+    else console.log(data);
+    return data;
+  }
+
+  useEffect(() => {
+    getGoalsAndCompletes();
+  });
+  
   const present = async () => {
     await sheet.current?.present();
+    setUpdateKey((prevKey) => prevKey + 1);
   }
 
   const dismiss = async () => {
     await sheet.current?.dismiss();
+    setUpdateKey((prevKey) => prevKey + 1);
   }
   
   const onLogout = async() => {
@@ -29,6 +45,11 @@ const Home = () => {
     if ( error) {
       Alert.alert('Sign out', 'Error signing out')
     }
+  }
+
+  const test = () => {
+    console.log('rerender')
+    return getCurrentMonth();
   }
 
   return (
@@ -44,36 +65,14 @@ const Home = () => {
           </Pressable>
         </View>
         <View className="flex flex-row justify-between">
-          <Text>November</Text>
+          <Text>{ test() }</Text>
           <View className="flex flex-row justify-between w-[60%] mr-4">
-            <View>
-              <Text>19</Text>
-              <Text>Tu</Text>
-            </View>
-            <View>
-              <Text>19</Text>
-              <Text>Tu</Text>
-            </View>
-            <View>
-              <Text>19</Text>
-              <Text>Tu</Text>
-            </View>
-            <View>
-              <Text>19</Text>
-              <Text>Tu</Text>
-            </View>
-            <View>
-              <Text>19</Text>
-              <Text>Tu</Text>
-            </View>
-            <View>
-              <Text>19</Text>
-              <Text>Tu</Text>
-            </View>
-            <View>
-              <Text>19</Text>
-              <Text>Tu</Text>
-            </View>
+            {dates.map((date, index) => (
+              <View key={index}>
+                <Text>{ date }</Text>
+                <Text>{ days[index] }</Text>
+              </View>
+            ))}
           </View>
         </View>
         <ScrollView>
