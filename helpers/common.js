@@ -30,7 +30,7 @@ export const getDaysOfCurrentWeek = () => {
   for (let i = 0; i < 7; i++) {
     const date = new Date(startOfWeek); // Clone the start date
     date.setDate(startOfWeek.getDate() + i); // Add `i` days to get each day of the week
-    days.push(date.getDate()); // Format as YYYY-MM-DD and push to array
+    days.push(date.toISOString().split('T')[0]); // Format as YYYY-MM-DD and push to array
   }
 
   return days;

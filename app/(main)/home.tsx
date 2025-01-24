@@ -12,23 +12,35 @@ import { useEffect, useRef, useState } from "react"
 import { Modal, FlatList, TextInput } from 'react-native';
 import { TrueSheet } from "@lodev09/react-native-true-sheet"
 import HabitFormSheet from "@/components/HabitFormSheet"
+import { getAuthenticatedUser } from "@/services/userService"
+import { User } from "@supabase/supabase-js"
 
 const Home = () => {
   const sheet = useRef<TrueSheet>(null)
   const [updateKey, setUpdateKey] = useState(0)
-
+  const [goalsAndCompletes, setGoalsAndCompletes] = useState([])
+  const { user } = useAuth();
   const dates = getDaysOfCurrentWeek();
-  
-  const getGoalsAndCompletes = async () => {
-    let { data, error } = await supabase.rpc('getgoalsandcompletes')
+
+  const fetchGoals = async (userId: string) => {
+    let { data, error } = await supabase.rpc('getgoalsandcompletes', { user_id: userId })
     if (error) console.error(error)
     else console.log(data);
-    return data;
-  }
 
+    setGoalsAndCompletes(data);
+  }
+  
   useEffect(() => {
-    getGoalsAndCompletes();
-  });
+    if (user?.id) {
+      fetchGoals(user.id);
+    }
+  }, []);
+  
+  useEffect(() => {
+    if (user?.id) {
+      fetchGoals(user.id);
+    }
+  }, [updateKey]);
   
   const present = async () => {
     await sheet.current?.present();
@@ -68,31 +80,40 @@ const Home = () => {
           <View className="flex flex-row justify-between w-[63%] mr-8">
             {dates.map((date, index) => (
               <View key={index}>
-                <Text>{ date }</Text>
+                <Text>{ date.split('-')[2] }</Text>
                 <Text>{ days[index] }</Text>
               </View>
             ))}
           </View>
         </View>
-        <ScrollView className="mt-4">
-          <View className="bg-green-500 rounded-xl h-32 flex flex-row justify-between mr-4">
-            <View className="ml-4">
-              <View className="mt-6">
-                <Text>15 x</Text>
+        <ScrollView className="mt-2 mb-6">
+          {goalsAndCompletes.map((goal, index) => {
+            const completed_dates = goal.completed_dates;
+            return <View key={ index } className="bg-green-500 rounded-xl h-32 flex flex-row justify-between mr-4 mt-4">
+              <View className="ml-4">
+                {/*
+                <View className="mt-6">
+                  <Text>15 x</Text>
+                </View>
+                */}
+                <View className="mt-14">
+                  <Text className="text-lg font-bold">{ goal.name }</Text>
+                  {
+                    goal?.mincount && goal?.minunit &&
+                    <Text><Text className="font-bold">{ goal.mincount }</Text> { goal.minunit }</Text>
+                  }
+                </View>
               </View>
-              <View>
-                <Text>Read</Text>
-                <Text>10 pages</Text>
+              <View className="flex flex-row justify-between w-[65%] mr-4">
+                {dates.map((date, index) => {
+                  const completed = completed_dates === null ? false : completed_dates.includes(date);
+                  return <Pressable key={ index } className="mt-6" onPress={() => console.log('pressed')}>
+                    <View className={ `h-4 w-4 rounded-lg border-2 border-black-500 ${ completed ? "bg-black" : "" }`} />
+                  </Pressable>
+                })}
               </View>
             </View>
-            <View className="flex flex-row justify-between w-[65%] mr-4">
-              {dates.map((date, index) => (
-                <Pressable className="mt-6" onPress={() => console.log('pressed')}>
-                  <View className="h-4 w-4 rounded-lg border-2 border-black-500" />
-                </Pressable>
-              ))}
-            </View>
-          </View>
+          })}
         </ScrollView>
       </View>
     </ScreenWrapper>
