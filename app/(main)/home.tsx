@@ -14,6 +14,7 @@ import { TrueSheet } from "@lodev09/react-native-true-sheet"
 import HabitFormSheet from "@/components/HabitFormSheet"
 import { getAuthenticatedUser } from "@/services/userService"
 import { User } from "@supabase/supabase-js"
+import RadioButton from "@/components/RadioButton"
 
 const Home = () => {
   const sheet = useRef<TrueSheet>(null)
@@ -23,6 +24,7 @@ const Home = () => {
   const dates = getDaysOfCurrentWeek();
 
   const fetchGoals = async (userId: string) => {
+    setGoalsAndCompletes([]);
     let { data, error } = await supabase.rpc('getgoalsandcompletes', { user_id: userId })
     if (error) console.error(error)
     else console.log(data);
@@ -38,6 +40,7 @@ const Home = () => {
   
   useEffect(() => {
     if (user?.id) {
+      console.log('fetching goals')
       fetchGoals(user.id);
     }
   }, [updateKey]);
@@ -107,9 +110,7 @@ const Home = () => {
               <View className="flex flex-row justify-between w-[65%] mr-4">
                 {dates.map((date, index) => {
                   const completed = completed_dates === null ? false : completed_dates.includes(date);
-                  return <Pressable key={ index } className="mt-6" onPress={() => console.log('pressed')}>
-                    <View className={ `h-4 w-4 rounded-lg border-2 border-black-500 ${ completed ? "bg-black" : "" }`} />
-                  </Pressable>
+                  return <RadioButton key={ index } isOnInit={ completed } />
                 })}
               </View>
             </View>
