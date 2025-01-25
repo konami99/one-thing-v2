@@ -110,7 +110,7 @@ const Home = () => {
               <View className="flex flex-row justify-between w-[65%] mr-4">
                 {dates.map((date, index) => {
                   const completed = completed_dates === null ? false : completed_dates.includes(date);
-                  return <RadioButton key={ index } isOnInit={ completed } />
+                  return <RadioButton key={ index } isOnInit={ completed } goalId={ goal?.id } date={ date } />
                 })}
               </View>
             </View>

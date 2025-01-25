@@ -1,16 +1,52 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Pressable, View } from 'react-native';
+import { supabase } from '@/lib/supabase';
 
 interface RadioButtonProps {
   isOnInit: boolean;
+  goalId: string;
+  date: string;
 }
 
-const RadioButton = ({ isOnInit }: RadioButtonProps) => {
+const RadioButton = ({ isOnInit, goalId, date }: RadioButtonProps) => {
   const [isOn, setIsOn] = useState(isOnInit);
+  const firstUpdate = useRef(true);
 
-  const toggleHandler = () => {
-    console.log(isOn)
-    console.log('pressed');
+  useLayoutEffect(() => {
+    if (firstUpdate.current) {
+      firstUpdate.current = false;
+      return;
+    }
+
+    if (isOn) {
+      insertComplete();
+    } else {
+      deleteComplete();
+    }
+  });
+
+  const insertComplete = async () => {
+    console.log('inserting');
+    const { error } = await supabase
+      .from('Complete')
+      .insert({
+        date,
+        goalId,
+      });
+  }
+
+  const deleteComplete = async () => {
+    console.log('deleting');
+    const { error } = await supabase
+      .from('Complete')
+      .delete()
+      .eq('goalId', goalId)
+      .eq('date', date);
+  }
+
+  const toggleHandler = async () => {
+    console.log('goalId', goalId);
+    console.log('date', date);
     setIsOn(!isOn);
   }
 

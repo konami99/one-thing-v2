@@ -82,8 +82,6 @@ const HabitFormSheet = ({ sheet, dismiss }: HabitFormSheetProps) => {
       .from('Goal')
       .insert({
         name: habit,
-        createdAt: new Date(),
-        updatedAt: new Date(),
         frequency: frequency,
         frequencyRange: 1,
         minCount: minCount,
@@ -151,7 +149,6 @@ const HabitFormSheet = ({ sheet, dismiss }: HabitFormSheetProps) => {
       sizes={['large']}
       cornerRadius={24}
       style={{"padding": 24}}
-      onDismiss={ () => dismiss() }
     >
       <Text className="mb-[15px] text-4xl">I want to *</Text>
       <FlatList
