@@ -12,6 +12,7 @@ const RadioButton = ({ isOnInit, goalId, date }: RadioButtonProps) => {
   const [isOn, setIsOn] = useState(isOnInit);
   const firstUpdate = useRef(true);
 
+  /*
   useLayoutEffect(() => {
     if (firstUpdate.current) {
       firstUpdate.current = false;
@@ -24,6 +25,7 @@ const RadioButton = ({ isOnInit, goalId, date }: RadioButtonProps) => {
       deleteComplete();
     }
   });
+  */
 
   const insertComplete = async () => {
     console.log('inserting');
@@ -47,6 +49,13 @@ const RadioButton = ({ isOnInit, goalId, date }: RadioButtonProps) => {
   const toggleHandler = async () => {
     console.log('goalId', goalId);
     console.log('date', date);
+
+    if (isOn) {
+      deleteComplete();
+    } else {
+      insertComplete();
+    }
+
     setIsOn(!isOn);
   }
 

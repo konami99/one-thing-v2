@@ -84,7 +84,7 @@ const Home = () => {
             {dates.map((date, index) => (
               <View key={index}>
                 <Text>{ date.split('-')[2] }</Text>
-                <Text>{ days[index] }</Text>
+                <Text>{ days[new Date(date).getDay()] }</Text>
               </View>
             ))}
           </View>

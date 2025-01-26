@@ -23,7 +23,7 @@ export const getDaysOfCurrentWeek = () => {
   const days = [];
 
   // Calculate the start of the week (Sunday)
-  const dayOfWeek = currentDate.getDay(); // Sunday = 0, Monday = 1, ..., Saturday = 6
+  const dayOfWeek = 1; // Sunday = 0, Monday = 1, ..., Saturday = 6
   startOfWeek.setDate(currentDate.getDate() - dayOfWeek);
 
   // Loop through the week
@@ -47,4 +47,16 @@ const months = [
   "July", "August", "September", "October", "November", "December"
 ];
 
-export const days = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+interface daysProps {
+  [key: number]: string
+}
+
+export const days: daysProps = {
+  0: "Su",
+  1: "Mo",
+  2: "Tu",
+  3: "We",
+  4: "Th",
+  5: "Fr",
+  6: "Sa",
+}
