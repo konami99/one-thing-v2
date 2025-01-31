@@ -3,23 +3,27 @@ import BackButton from "@/components/BackButton"
 import { useRouter } from "expo-router";
 import { Calendar, CalendarUtils, DateData } from 'react-native-calendars';
 import ScreenWrapper from "@/components/ScreenWrapper";
-import { SetStateAction, useCallback, useEffect, useMemo, useState } from "react";
+import { SetStateAction, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { getDaysOfCurrentWeek } from "@/helpers/common";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLocalSearchParams } from 'expo-router';
 import RadioButton from "@/components/RadioButton";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import { TrueSheet } from "@lodev09/react-native-true-sheet";
+import HabitFormSheet from "@/components/HabitFormSheet";
 
 const INITIAL_DATE = new Date().toISOString().split('T')[0];
 
 const GoalEdit = () => {
+  const sheet = useRef<TrueSheet>(null)
   const { user } = useAuth();
   const router = useRouter();
   const [selected, setSelected] = useState(INITIAL_DATE);
   const [currentMonth, setCurrentMonth] = useState(INITIAL_DATE);
   const [goalsAndCompletes, setGoalsAndCompletes] = useState([])
   const { id } = useLocalSearchParams<{ id: string }>();
+  const [updateKey, setUpdateKey] = useState(0)
 
   const getDate = (count: number) => {
     console.log('getdate')
@@ -32,7 +36,7 @@ const GoalEdit = () => {
 
   const fetchGoals = async (userId: string, some_date: string) => {
     setGoalsAndCompletes([]);
-    let { data, error } = await supabase.rpc('getgoalsandcompletesfromgoalid2', { goalid: Number(id), user_id: userId, some_date })
+    let { data, error } = await supabase.rpc('getgoalsandcompletesfromgoalid', { goalid: Number(id), user_id: userId, some_date })
     if (error) console.error(error)
     else console.log(data);
 
@@ -75,13 +79,26 @@ const GoalEdit = () => {
     router.push(`/(main)/home`);
   }
 
+  const present = async () => {
+    await sheet.current?.present();
+  }
+
+  const dismiss = async () => {
+    await sheet.current?.dismiss();
+    setUpdateKey((prevKey) => prevKey + 1);
+  }
+
+  const goal = () => {
+    return goalsAndCompletes && goalsAndCompletes.length > 0 ? goalsAndCompletes[0] : undefined;
+  }
+
   return (
     <ScreenWrapper bg={"white"}>
       <View className="m-4 mt-2">
         <View className="m-3 flex flex-row justify-between">
           {
-            goalsAndCompletes && goalsAndCompletes.length > 0 &&
-            <Text className="text-4xl font-bold">{ goalsAndCompletes[0].name }</Text>
+            goal() &&
+            <Text className="text-4xl font-bold">{ goal()!.name }</Text>
           }
           <Pressable onPress={ back }>
             <FontAwesome5 name="arrow-left" size={24} color="black" />
@@ -115,20 +132,21 @@ const GoalEdit = () => {
         </View>
         <View className="mt-4">
           <Text className="mx-4 text-3xl">Goal</Text>
-          <View className="mx-4 mt-2 py-1 px-4 bg-green-500 rounded-xl flex flex-row items-center justify-between">
+          <Pressable onPress={present} className="mx-4 mt-2 py-1 px-4 bg-green-500 rounded-xl flex flex-row items-center justify-between">
             <Text className="font-bold text-xl">
-              { goalsAndCompletes && goalsAndCompletes.length > 0
-                && `${goalsAndCompletes[0].name} ${goalsAndCompletes[0].frequency} times in ${goalsAndCompletes[0].frequencyrange} days`  } 
+              { goal() &&
+                  `${goal()!.name} ${goal()!.frequency} times in ${goal()!.frequencyrange} days`  } 
             </Text>
             <FontAwesome5 name="pencil-alt" size={12} color="black" />
-          </View>
-          <View className="mx-4 mt-2 py-1 px-4 bg-green-500 rounded-xl flex flex-row items-center justify-between">
+          </Pressable>
+          <Pressable onPress={present} className="mx-4 mt-2 py-1 px-4 bg-green-500 rounded-xl flex flex-row items-center justify-between">
             <Text className="font-bold text-xl">
-              { goalsAndCompletes && goalsAndCompletes.length > 0
-                && `${goalsAndCompletes[0].mincount} ${goalsAndCompletes[0].minunit}`  } 
+              { goal() &&
+                  `${goal()!.mincount} ${goal()!.minunit}`  } 
             </Text>
             <FontAwesome5 name="pencil-alt" size={12} color="black" />
-          </View>
+          </Pressable>
+          <HabitFormSheet sheet={sheet} dismiss={dismiss} goal={goal()} />
         </View>
       </View>
     </ScreenWrapper>

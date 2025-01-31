@@ -22,7 +22,7 @@ const Home = () => {
   const [updateKey, setUpdateKey] = useState(0)
   const [goalsAndCompletes, setGoalsAndCompletes] = useState([])
   const { user } = useAuth();
-  const dates = getDaysOfCurrentWeek();
+  const currentWeekDates = getDaysOfCurrentWeek();
 
   const fetchGoals = async (userId: string) => {
     setGoalsAndCompletes([]);
@@ -82,7 +82,7 @@ const Home = () => {
         <View className="flex flex-row justify-between">
           <Text>{ test() }</Text>
           <View className="flex flex-row justify-between w-[63%] mr-8">
-            {dates.map((date, index) => (
+            {currentWeekDates.map((date, index) => (
               <View key={index}>
                 <Text>{ date.split('-')[2] }</Text>
                 <Text>{ days[new Date(date).getDay()] }</Text>
@@ -92,7 +92,7 @@ const Home = () => {
         </View>
         <ScrollView className="mt-2 mb-6">
           {goalsAndCompletes.map((goal, index) => (
-            <Goal key={index} goal={goal} dates={dates} />
+            <Goal key={index} goal={goal} currentWeekDates={currentWeekDates} />
           ))}
         </ScrollView>
       </View>

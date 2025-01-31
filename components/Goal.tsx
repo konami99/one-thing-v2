@@ -4,10 +4,10 @@ import { Link, useRouter } from "expo-router";
 
 interface GoalProps {
   goal: any;
-  dates: string[];
+  currentWeekDates: string[];
 }
 
-const Goal = ({ goal, dates }: GoalProps) => {
+const Goal = ({ goal, currentWeekDates }: GoalProps) => {
   const router = useRouter();
 
   const completed_dates = goal.completed_dates;
@@ -34,7 +34,7 @@ const Goal = ({ goal, dates }: GoalProps) => {
         </View>
       </View>
       <View className="flex flex-row justify-between w-[65%] mr-4">
-        {dates.map((date, index) => {
+        {currentWeekDates.map((date, index) => {
           const completed = completed_dates === null ? false : completed_dates.includes(date);
           return <RadioButton key={ index } isOnInit={ completed } goalId={ goal?.id } date={ date } style="mt-6" />
         })}

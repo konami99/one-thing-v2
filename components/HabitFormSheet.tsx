@@ -10,7 +10,7 @@ import { supabase } from "../lib/supabase";
 import { useAuth } from "../contexts/AuthContext"
 
 type ItemData = {
-  id: number,
+  id: string,
   type: string,
   title: string,
 }
@@ -18,9 +18,11 @@ type ItemData = {
 type HabitFormSheetProps = {
   sheet: React.RefObject<TrueSheet>;
   dismiss: Function,
+  goal?: any,
 };
 
-const HabitFormSheet = ({ sheet, dismiss }: HabitFormSheetProps) => {
+const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
+  const flatListRef = useRef(null);
   const { user } = useAuth();
 
   const [habit, setHabit] = useState('');
@@ -34,40 +36,52 @@ const HabitFormSheet = ({ sheet, dismiss }: HabitFormSheetProps) => {
   // "pages"
   const [minUnit, setMinUnit] = useState<string | null>(null)
   
-  const [buttonText, setButtonText] = useState('CREATE')
+  // const [buttonText, setButtonText] = useState('CREATE')
+
+  const buttonText = () => {
+    return goal === undefined ? 'CREATE' : 'SAVE'
+  }
 
   const data: ItemData[] = [
     {
-      id: 0,
+      id: '0',
       type: 'TextInput',
       title: 'Activity',
     },
     {
-      id: 1,
+      id: '1',
       type: 'Text',
       title: 'Drink water',
     },
     {
-      id: 2,
+      id: '2',
       type: 'Text',
       title: 'Brush teeth',
     },
     {
-      id: 3,
+      id: '3',
       type: 'Text',
       title: 'Study',
     },
     {
-      id: 4,
+      id: '4',
       type: 'Text',
       title: 'Make bed',
     },
     {
-      id: 5,
+      id: '5',
       type: 'Text',
       title: 'Walk',
     },
   ];
+
+  const scrollToItem = (index) => {
+    flatListRef.current?.scrollToIndex({
+      index,
+      animated: true,
+      viewPosition: 0.5, // Center the item in view
+    });
+  };
 
   const resetForm = () => {
 
@@ -135,6 +149,7 @@ const HabitFormSheet = ({ sheet, dismiss }: HabitFormSheetProps) => {
         onPress={ () => {
           setHabit(item.title);
           setActivityInput('');
+          scrollToItem(item.id)
         }}
         className={`border-4 border-green-500 mr-4 rounded-full w-36 h-14 flex justify-center items-center ${ habit === item.title ? 'bg-green-500' : 'white' }`}>
       <Text className="text-xl">{item.title}</Text>
@@ -152,10 +167,13 @@ const HabitFormSheet = ({ sheet, dismiss }: HabitFormSheetProps) => {
     >
       <Text className="mb-[15px] text-4xl">I want to *</Text>
       <FlatList
+        ref={flatListRef}
+        initialScrollIndex={0}
         data={data}
         horizontal
         renderItem={renderItem}
         showsHorizontalScrollIndicator={false}
+        keyExtractor={ item => item.id }
       />
       <View className="flex flex-row items-center mt-4">
         <View className="w-24 bg-green-500 rounded-xl mr-2">
@@ -198,7 +216,7 @@ const HabitFormSheet = ({ sheet, dismiss }: HabitFormSheetProps) => {
 
       <View className="flex flex-row items-center justify-center mt-8">
         <Pressable className="flex flex-row items-center justify-center h-14 w-1/3 rounded-full bg-green-500" onPress={onCreate}>
-          <Text className='text-white text-lg font-bold'>{ buttonText }</Text>
+          <Text className='text-white text-lg font-bold'>{ buttonText() }</Text>
         </Pressable>
       </View>
 
