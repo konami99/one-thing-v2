@@ -32,7 +32,7 @@ const GoalEdit = () => {
 
   const fetchGoals = async (userId: string, some_date: string) => {
     setGoalsAndCompletes([]);
-    let { data, error } = await supabase.rpc('getgoalsandcompletesfromgoalid2', { goalid: id, user_id: userId, some_date })
+    let { data, error } = await supabase.rpc('getgoalsandcompletesfromgoalid2', { goalid: Number(id), user_id: userId, some_date })
     if (error) console.error(error)
     else console.log(data);
 
@@ -71,6 +71,7 @@ const GoalEdit = () => {
   };
 
   const back = () => {
+    console.log(`back`)
     router.push(`/(main)/home`);
   }
 
@@ -87,11 +88,28 @@ const GoalEdit = () => {
           </Pressable>
         </View>
         <View className="mt-4">
-          <Text className="ml-4 text-3xl">Activity</Text>
+          <Text className="mx-4 text-3xl">Activity</Text>
           <Calendar
             onMonthChange={ (date: DateData) => { fetchGoals(user.id, date.dateString); }}
             dayComponent={({ date, index }: { date: string, index:  number }) => renderDay(date, index)}
           />
+        </View>
+        <View className="mt-4">
+          <Text className="mx-4 text-3xl">Goal</Text>
+          <View className="mx-4 mt-2 py-1 px-4 bg-green-500 rounded-xl flex flex-row items-center justify-between">
+            <Text className="font-bold text-xl">
+              { goalsAndCompletes && goalsAndCompletes.length > 0
+                && `${goalsAndCompletes[0].name} ${goalsAndCompletes[0].frequency} times in ${goalsAndCompletes[0].frequencyrange} days`  } 
+            </Text>
+            <FontAwesome5 name="pencil-alt" size={12} color="black" />
+          </View>
+          <View className="mx-4 mt-2 py-1 px-4 bg-green-500 rounded-xl flex flex-row items-center justify-between">
+            <Text className="font-bold text-xl">
+              { goalsAndCompletes && goalsAndCompletes.length > 0
+                && `${goalsAndCompletes[0].mincount} ${goalsAndCompletes[0].minunit}`  } 
+            </Text>
+            <FontAwesome5 name="pencil-alt" size={12} color="black" />
+          </View>
         </View>
       </View>
     </ScreenWrapper>
