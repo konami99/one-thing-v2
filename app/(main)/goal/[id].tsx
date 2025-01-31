@@ -61,7 +61,7 @@ const GoalEdit = () => {
         return <RadioButton key={ index } isOnInit={ false } goalId={ goal?.id } date={ date.dateString } style="mt-0.5" />
       }
       else if (!dates.includes(date.dateString) && completed_dates && completed_dates.includes(date.dateString)) {
-        return <View className={ `h-4 w-4 rounded-lg border-2 border-gray-500 bg-gray-500`} />
+        return <View className={ `mt-0.5 h-4 w-4 rounded-lg border-2 border-gray-500 bg-gray-500`} />
       }
     }
 
@@ -92,6 +92,25 @@ const GoalEdit = () => {
           <Calendar
             onMonthChange={ (date: DateData) => { fetchGoals(user.id, date.dateString); }}
             dayComponent={({ date, index }: { date: string, index:  number }) => renderDay(date, index)}
+            theme={{
+              arrowColor: 'black',
+              'stylesheet.calendar.header': {
+                header: {
+                  flexDirection: 'row',
+                  justifyContent: 'start',
+                  paddingLeft: 0,
+                  paddingRight: 10,
+                  marginTop: 6,
+                  alignItems: 'center',
+                },
+              }
+            }}
+            /*
+            renderHeader={ (date: DateData)  => {
+              console.log(date)
+              return <Text>ere</Text>
+            }}
+            */
           />
         </View>
         <View className="mt-4">
