@@ -8,12 +8,7 @@ import { TrueSheet } from "@lodev09/react-native-true-sheet"
 import { Picker } from '@react-native-picker/picker';
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../contexts/AuthContext"
-
-type ItemData = {
-  id: string,
-  type: string,
-  title: string,
-}
+import { habits } from "@/helpers/common";
 
 type HabitFormSheetProps = {
   sheet: React.RefObject<TrueSheet>;
@@ -55,39 +50,6 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
       setMinUnit(goal.minunit)
     }
   }, [goal]);
-
-  const data: ItemData[] = [
-    {
-      id: '0',
-      type: 'TextInput',
-      title: 'Activity',
-    },
-    {
-      id: '1',
-      type: 'Text',
-      title: 'Drink water',
-    },
-    {
-      id: '2',
-      type: 'Text',
-      title: 'Brush teeth',
-    },
-    {
-      id: '3',
-      type: 'Text',
-      title: 'Study',
-    },
-    {
-      id: '4',
-      type: 'Text',
-      title: 'Make bed',
-    },
-    {
-      id: '5',
-      type: 'Text',
-      title: 'Walk',
-    },
-  ];
 
   const scrollToItem = (index) => {
     flatListRef.current?.scrollToIndex({
@@ -248,7 +210,7 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
       <FlatList
         ref={flatListRef}
         initialScrollIndex={0}
-        data={data}
+        data={habits}
         horizontal
         renderItem={renderItem}
         showsHorizontalScrollIndicator={false}

@@ -1,6 +1,7 @@
 import { View, Text, Pressable } from "react-native";
 import RadioButton from "./RadioButton";
 import { Link, useRouter } from "expo-router";
+import { getHabitFromId } from "@/helpers/common";
 
 interface GoalProps {
   goal: any;
@@ -26,7 +27,7 @@ const Goal = ({ goal, currentWeekDates }: GoalProps) => {
         </View>
         */}
         <View className="mt-14">
-          <Text className="text-lg font-bold">{ goal.name }</Text>
+          <Text className="text-lg font-bold">{ getHabitFromId(goal.name) }</Text>
           {
             goal?.mincount && goal?.minunit &&
             <Text><Text className="font-bold">{ goal.mincount }</Text> { goal.minunit }</Text>

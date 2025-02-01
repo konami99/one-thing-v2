@@ -12,6 +12,7 @@ import RadioButton from "@/components/RadioButton";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { TrueSheet } from "@lodev09/react-native-true-sheet";
 import HabitFormSheet from "@/components/HabitFormSheet";
+import { getHabitFromId } from "@/helpers/common";
 
 const INITIAL_DATE = new Date().toISOString().split('T')[0];
 
@@ -98,7 +99,7 @@ const GoalEdit = () => {
         <View className="m-3 flex flex-row justify-between">
           {
             goal() &&
-            <Text className="text-4xl font-bold">{ goal()!.name }</Text>
+            <Text className="text-4xl font-bold">{ getHabitFromId(goal()!.name) }</Text>
           }
           <Pressable onPress={ back }>
             <FontAwesome5 name="arrow-left" size={24} color="black" />
@@ -135,7 +136,7 @@ const GoalEdit = () => {
           <Pressable onPress={present} className="mx-4 mt-2 py-1 px-4 bg-green-500 rounded-xl flex flex-row items-center justify-between">
             <Text className="font-bold text-xl">
               { goal() &&
-                  `${goal()!.name} ${goal()!.frequency} times in ${goal()!.frequencyrange} days`  } 
+                  `${getHabitFromId(goal()!.name)} ${goal()!.frequency} times in ${goal()!.frequencyrange} days`  } 
             </Text>
             <FontAwesome5 name="pencil-alt" size={12} color="black" />
           </Pressable>

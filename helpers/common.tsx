@@ -60,3 +60,46 @@ export const days: daysProps = {
   5: "Fr",
   6: "Sa",
 }
+
+type ItemData = {
+  id: string,
+  type: string,
+  title: string,
+}
+
+export const habits: ItemData[] = [
+  {
+    id: '0',
+    type: 'TextInput',
+    title: 'Activity',
+  },
+  {
+    id: '1',
+    type: 'Text',
+    title: 'Drink water',
+  },
+  {
+    id: '2',
+    type: 'Text',
+    title: 'Brush teeth',
+  },
+  {
+    id: '3',
+    type: 'Text',
+    title: 'Study',
+  },
+  {
+    id: '4',
+    type: 'Text',
+    title: 'Make bed',
+  },
+  {
+    id: '5',
+    type: 'Text',
+    title: 'Walk',
+  },
+];
+
+export const getHabitFromId = (id: string): string => {
+  return habits.find((habit: ItemData) => habit.id === id)?.title || id
+}
