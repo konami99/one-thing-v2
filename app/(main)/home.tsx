@@ -90,7 +90,10 @@ const Home = () => {
             ))}
           </View>
         </View>
-        <ScrollView className="mt-2 mb-6">
+        <ScrollView className="mt-2 mb-6"
+          showsHorizontalScrollIndicator={ false }
+          showsVerticalScrollIndicator={ false }
+          >
           {goalsAndCompletes.map((goal, index) => (
             <Goal key={index} goal={goal} currentWeekDates={currentWeekDates} />
           ))}

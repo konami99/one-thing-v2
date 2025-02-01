@@ -47,7 +47,7 @@ const GoalEdit = () => {
     if (user?.id) {
       fetchGoals(user.id, INITIAL_DATE);
     }
-  }, []);
+  }, [updateKey]);
 
   const toggleHandler = () => {
     console.log('toggle')

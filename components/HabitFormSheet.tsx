@@ -2,7 +2,7 @@ import { setStatusBarHidden } from "expo-status-bar"
 import { Alert, StyleSheet, Text, View } from "react-native"
 import { ScrollView, Pressable } from "react-native"
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Modal, Button, FlatList, TextInput } from 'react-native'
 import { TrueSheet } from "@lodev09/react-native-true-sheet"
 import { Picker } from '@react-native-picker/picker';
@@ -28,19 +28,33 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
   const [habit, setHabit] = useState('');
   const [activityInput, setActivityInput] = useState('');
   // "2" times
-  const [frequency, setFrequency] = useState(1);
+  const [frequency, setFrequency] = useState('1');
   // in "11" days
   const [frequencyRange, setFrequencyRange] = useState(1);
   // "10"
   const [minCount, setMinCount] = useState<number | null>(null)
   // "pages"
   const [minUnit, setMinUnit] = useState<string | null>(null)
-  
-  // const [buttonText, setButtonText] = useState('CREATE')
 
-  const buttonText = () => {
-    return goal === undefined ? 'CREATE' : 'SAVE'
-  }
+  const [buttonText, setButtonText] = useState('CREATE')
+
+  useEffect(() => {
+    var name = goal ? goal.name : '';
+    if (name.length > 0) {
+      if (isNaN(Number(name))) {
+        setActivityInput(name)
+      } else {
+        setActivityInput('')
+        scrollToItem(goal.name)
+      }
+      setHabit(name)
+      setButtonText('SAVE')
+      setFrequency(goal.frequency.toString())
+      setFrequencyRange(goal.frequencyrange)
+      setMinCount(goal.mincount)
+      setMinUnit(goal.minunit)
+    }
+  }, [goal]);
 
   const data: ItemData[] = [
     {
@@ -83,12 +97,54 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
     });
   };
 
+  /*
   const resetForm = () => {
 
+  }
+  */
+
+  const handleDismiss = () => {
+    console.log('dismiss', goal)
+
+    var name = goal ? goal.name : '';
+    if (name.length > 0) {
+      console.log('&&&&&&&&')
+
+      if (isNaN(Number(name))) {
+        setActivityInput(name)
+      } else {
+        setActivityInput('')
+        scrollToItem(goal.name)
+      }
+      setHabit(name)
+      setButtonText('SAVE')
+      setFrequency(goal.frequency.toString())
+      setFrequencyRange(goal.frequencyrange)
+      setMinCount(goal.mincount)
+      setMinUnit(goal.minunit)
+    }
   }
 
   const timePluralConverter = () => {
     return frequency > 1 ? 'times' : 'time';
+  }
+
+  const updateHabit = async () => {
+    const { error } = await supabase
+      .from('Goal')
+      .update({
+        name: habit,
+        frequency: frequency,
+        frequencyRange: frequencyRange,
+        minCount: minCount,
+        minUnit: minUnit,
+        color: 'white',
+        enabled: true,
+        userId: user.id,
+      })
+      .eq('id', goal.id)
+
+    return error;
   }
 
   const createHabit = async () => {
@@ -110,6 +166,29 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
     return error;
   }
 
+  const onUpdate = async() => {
+    console.log('SUBMIT')
+    console.log('habit', habit)
+    console.log('frequency', frequency);
+    console.log('frequencyRange', frequencyRange)
+    console.log('minCount', minCount);
+    console.log('minUnit', minUnit)
+
+    if (habit.trim() === '') {
+      console.log('habit is empty')
+    } else {
+      console.log('push to supa')
+      const error = await updateHabit(); 
+      console.log('error', error)
+      if (error) {
+
+      } else {
+        // resetForm();
+        await dismiss();
+      }
+    }
+  }
+
   const onCreate = async() => {
     console.log('SUBMIT')
     console.log('habit', habit)
@@ -127,31 +206,30 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
       if (error) {
 
       } else {
-        resetForm();
+        // resetForm();
         await dismiss();
       }
     }
   }
 
   const renderItem = ({item}: {item: ItemData}) => {
-    console.log(habit)
     const result = item.type === 'TextInput' ? <TextInput
       onChangeText={ (input) => {
         setHabit(input);
         setActivityInput(input);
       }}
       maxLength={30}
-      value={activityInput}
+      value={ activityInput }
       className="bg-slate-100 mr-4 rounded-lg w-36 h-14 pl-2 text-xl"
       placeholder={item.title}
     />
     : <Pressable
         onPress={ () => {
-          setHabit(item.title);
+          setHabit(item.id);
           setActivityInput('');
           scrollToItem(item.id)
         }}
-        className={`border-4 border-green-500 mr-4 rounded-full w-36 h-14 flex justify-center items-center ${ habit === item.title ? 'bg-green-500' : 'white' }`}>
+        className={`border-4 border-green-500 mr-4 rounded-full w-36 h-14 flex justify-center items-center ${ habit === item.id ? 'bg-green-500' : 'white' }`}>
       <Text className="text-xl">{item.title}</Text>
     </Pressable>
 
@@ -164,6 +242,7 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
       sizes={['large']}
       cornerRadius={24}
       style={{"padding": 24}}
+      onDismiss={ handleDismiss }
     >
       <Text className="mb-[15px] text-4xl">I want to *</Text>
       <FlatList
@@ -215,8 +294,8 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
       </View>
 
       <View className="flex flex-row items-center justify-center mt-8">
-        <Pressable className="flex flex-row items-center justify-center h-14 w-1/3 rounded-full bg-green-500" onPress={onCreate}>
-          <Text className='text-white text-lg font-bold'>{ buttonText() }</Text>
+        <Pressable className="flex flex-row items-center justify-center h-14 w-1/3 rounded-full bg-green-500" onPress={ goal ? onUpdate : onCreate }>
+          <Text className='text-white text-lg font-bold'>{ buttonText }</Text>
         </Pressable>
       </View>
 
