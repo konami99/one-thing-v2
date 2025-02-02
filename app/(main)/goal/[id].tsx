@@ -112,6 +112,14 @@ const GoalEdit = () => {
     }
   }
 
+  const smallestUnit = (): string => {
+    if (goal() && goal()!.mincount && goal()!.minunit) {
+      return `${goal()!.mincount} ${goal()!.minunit}`
+    }
+    
+    return 'Define a smallest unit'
+  }
+
   return (
     <ScreenWrapper bg={"white"}>
       <ScrollView
@@ -165,8 +173,7 @@ const GoalEdit = () => {
             </Pressable>
             <Pressable onPress={present} className="mx-4 mt-2 py-1 px-4 bg-green-500 rounded-xl flex flex-row items-center justify-between">
               <Text className="font-bold text-xl">
-                { goal() &&
-                    `${goal()!.mincount} ${goal()!.minunit}`  } 
+                { smallestUnit() }
               </Text>
               <FontAwesome5 name="pencil-alt" size={12} color="black" />
             </Pressable>

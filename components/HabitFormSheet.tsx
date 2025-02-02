@@ -197,6 +197,14 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
 
     return result;
   }
+
+  const onChangeMinCount = (input: string) => {
+    setMinCount(input === '' ? null : parseInt(input))
+  }
+
+  const onChangeMinUnit = (input: string) => {
+    setMinUnit(input === '' ? null : input)
+  }
   
   return (
     <TrueSheet
@@ -239,7 +247,7 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
             value={minCount?.toString()}
             maxLength={3}
             keyboardType="numeric"
-            onChangeText={ (input) => setMinCount(parseInt(input)) }
+            onChangeText={ onChangeMinCount }
             className="bg-slate-100 mr-4 rounded-lg w-full h-14 pl-2 text-xl"
             placeholder={ 'i.e. 2' }
           />
@@ -248,7 +256,7 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
           <TextInput
             value={minUnit?.toString()}
             maxLength={20}
-            onChangeText={ (input) => setMinUnit(input) }
+            onChangeText={ onChangeMinUnit }
             className="bg-slate-100 mr-4 rounded-lg w-full h-14 pl-2 text-xl"
             placeholder={ 'i.e. Minutes' }
           />
