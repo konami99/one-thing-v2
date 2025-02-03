@@ -25,7 +25,7 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
   // "2" times
   const [frequency, setFrequency] = useState('1');
   // in "11" days
-  const [frequencyRange, setFrequencyRange] = useState(1);
+  const [frequencyRange, setFrequencyRange] = useState('1');
   // "10"
   const [minCount, setMinCount] = useState<number | null>(null)
   // "pages"
@@ -45,7 +45,7 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
       setHabit(name)
       setButtonText('SAVE')
       setFrequency(goal.frequency.toString())
-      setFrequencyRange(goal.frequencyrange)
+      setFrequencyRange(goal.frequencyrange.toString())
       setMinCount(goal.mincount)
       setMinUnit(goal.minunit)
     }
@@ -81,7 +81,7 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
       setHabit(name)
       setButtonText('SAVE')
       setFrequency(goal.frequency.toString())
-      setFrequencyRange(goal.frequencyrange)
+      setFrequencyRange(goal.frequencyrange.toString())
       setMinCount(goal.mincount)
       setMinUnit(goal.minunit)
     }
@@ -96,13 +96,13 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
       .from('Goal')
       .update({
         name: habit,
-        frequency: frequency,
-        frequencyRange: frequencyRange,
+        frequency,
+        frequencyRange,
         minCount: minCount,
         minUnit: minUnit,
         color: 'white',
         enabled: true,
-        userId: user.id,
+        //userId: user.id,
       })
       .eq('id', goal.id)
 
@@ -114,15 +114,15 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
       .from('Goal')
       .insert({
         name: habit,
-        frequency: frequency,
-        frequencyRange: 1,
-        minCount: minCount,
-        minUnit: minUnit,
+        frequency,
+        frequencyRange,
+        minCount,
+        minUnit,
         streak: 0,
         count: 0,
         color: 'white',
         enabled: true,
-        userId: user.id,
+        //userId: user.id,
       })
 
     return error;
@@ -224,19 +224,36 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
         showsHorizontalScrollIndicator={false}
         keyExtractor={ item => item.id }
       />
-      <View className="flex flex-row items-center mt-4">
-        <View className="w-24 bg-green-500 rounded-xl mr-2">
-          <Picker
-            selectedValue={frequency}
-            onValueChange={(itemValue, itemIndex) =>
-              setFrequency(itemValue)
-            }>
-            <Picker.Item label="1" value="1" />
-            <Picker.Item label="2" value="2" />
-            <Picker.Item label="3" value="3" />
-          </Picker>
+      <View>
+        <View className="flex flex-row items-center mt-4">
+          <View className="w-24 bg-green-500 rounded-xl mr-2">
+            <Picker
+              selectedValue={frequency}
+              onValueChange={(itemValue, itemIndex) =>
+                setFrequency(itemValue)
+              }>
+              <Picker.Item label="1" value="1" />
+              <Picker.Item label="2" value="2" />
+              <Picker.Item label="3" value="3" />
+            </Picker>
+          </View>
+          <Text className="text-2xl">{ timePluralConverter() } in</Text>
         </View>
-        <Text className="text-2xl">{ timePluralConverter() } a day *</Text>
+        <View className="flex flex-row items-center mt-4">
+          <View className="w-24 bg-green-500 rounded-xl mr-2">
+            <Picker
+              className="w-24 bg-green-500 rounded-xl mr-2"
+              selectedValue={frequencyRange}
+              onValueChange={(itemValue, itemIndex) =>
+                setFrequencyRange(itemValue)
+              }>
+              <Picker.Item label="1" value="1" />
+              <Picker.Item label="2" value="2" />
+              <Picker.Item label="3" value="3" />
+            </Picker>
+          </View>
+          <Text className="text-2xl">days</Text>
+        </View>
       </View>
 
       <View className="mt-8">
