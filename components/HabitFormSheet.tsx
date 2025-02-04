@@ -9,6 +9,7 @@ import { Picker } from '@react-native-picker/picker';
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../contexts/AuthContext"
 import { habits } from "@/helpers/common";
+import { ItemData } from "@/helpers/common";
 
 type HabitFormSheetProps = {
   sheet: React.RefObject<TrueSheet>;
@@ -21,6 +22,8 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
   const { user } = useAuth();
 
   const [habit, setHabit] = useState('');
+  const [habitId, setHabitId] = useState(0);
+
   const [activityInput, setActivityInput] = useState('');
   // "2" times
   const [frequency, setFrequency] = useState('1');
@@ -35,14 +38,17 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
 
   useEffect(() => {
     var name = goal ? goal.name : '';
+
     if (name.length > 0) {
-      if (isNaN(Number(name))) {
+      if (goal.habitid === 0) {
         setActivityInput(name)
       } else {
+        console.log('LLLLLL', goal)
         setActivityInput('')
-        scrollToItem(goal.name)
+        scrollToItem(goal.habitid)
       }
       setHabit(name)
+      setHabitId(goal.habitid)
       setButtonText('SAVE')
       setFrequency(goal.frequency.toString())
       setFrequencyRange(goal.frequencyrange.toString())
@@ -69,16 +75,16 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
     console.log('dismiss', goal)
 
     var name = goal ? goal.name : '';
+    
     if (name.length > 0) {
-      console.log('&&&&&&&&')
-
-      if (isNaN(Number(name))) {
+      if (goal.habitid === 0) {
         setActivityInput(name)
       } else {
         setActivityInput('')
-        scrollToItem(goal.name)
+        scrollToItem(goal.habitid)
       }
       setHabit(name)
+      setHabitId(goal.habitid)
       setButtonText('SAVE')
       setFrequency(goal.frequency.toString())
       setFrequencyRange(goal.frequencyrange.toString())
@@ -88,7 +94,7 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
   }
 
   const timePluralConverter = () => {
-    return frequency > 1 ? 'times' : 'time';
+    return Number(frequency) > 1 ? 'times' : 'time';
   }
 
   const updateHabit = async () => {
@@ -96,6 +102,7 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
       .from('Goal')
       .update({
         name: habit,
+        habitId,
         frequency,
         frequencyRange,
         minCount: minCount,
@@ -114,6 +121,7 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
       .from('Goal')
       .insert({
         name: habit,
+        habitId,
         frequency,
         frequencyRange,
         minCount,
@@ -178,6 +186,7 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
     const result = item.type === 'TextInput' ? <TextInput
       onChangeText={ (input) => {
         setHabit(input);
+        setHabitId(Number(item.id));
         setActivityInput(input);
       }}
       maxLength={30}
@@ -187,11 +196,12 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
     />
     : <Pressable
         onPress={ () => {
-          setHabit(item.id);
+          setHabit(item.title);
+          setHabitId(Number(item.id));
           setActivityInput('');
           scrollToItem(item.id)
         }}
-        className={`border-4 border-green-500 mr-4 rounded-full w-36 h-14 flex justify-center items-center ${ habit === item.id ? 'bg-green-500' : 'white' }`}>
+        className={`border-4 border-green-500 mr-4 rounded-full w-36 h-14 flex justify-center items-center ${ habitId === Number(item.id) ? 'bg-green-500' : 'white' }`}>
       <Text className="text-xl">{item.title}</Text>
     </Pressable>
 

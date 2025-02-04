@@ -61,7 +61,7 @@ export const days: daysProps = {
   6: "Sa",
 }
 
-type ItemData = {
+export type ItemData = {
   id: string,
   type: string,
   title: string,
