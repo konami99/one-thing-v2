@@ -23,17 +23,18 @@ const _layout = () => {
 
   return (
     <AuthProvider>
-      <MainLayout />
-			{!isConnected && (
+      
+			{
+				isConnected ? <MainLayout /> : (
         <View className='flex flex-1 w-full bottom-0 bg-[#b52424] absolute items-center justify-center pb-1.5 px-2'>
-          <Text className='text-[#fff] text-center font-bold text-2xl'>
-            You are offline
-          </Text>
-          <Text className='text-[#fff] text-center'>
-            Try connect with internet or come back later
-          </Text>
-        </View>
-      )}
+					<Text className='text-[#fff] text-center font-bold text-2xl'>
+						You are offline
+					</Text>
+					<Text className='text-[#fff] text-center'>
+						Try connect with internet or come back later
+					</Text>
+        </View>)
+			}
     </AuthProvider>
   )
 }
