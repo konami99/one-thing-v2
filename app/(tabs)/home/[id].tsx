@@ -1,6 +1,6 @@
 import { View, Text, Pressable, ScrollView } from "react-native"
 import BackButton from "@/components/BackButton"
-import { useRouter } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { Calendar, CalendarUtils, DateData } from 'react-native-calendars';
 import ScreenWrapper from "@/components/ScreenWrapper";
 import { SetStateAction, useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -23,7 +23,7 @@ const GoalEdit = () => {
   const [selected, setSelected] = useState(INITIAL_DATE);
   const [currentMonth, setCurrentMonth] = useState(INITIAL_DATE);
   const [goalsAndCompletes, setGoalsAndCompletes] = useState([])
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const { id, dateTime } = useLocalSearchParams<{ id: string, dateTime: string }>();
   const [updateKey, setUpdateKey] = useState(0)
   const [confirmDelete, setConfirmDelete] = useState(false);
 
@@ -49,11 +49,7 @@ const GoalEdit = () => {
     if (user?.id) {
       fetchGoals(user.id, INITIAL_DATE);
     }
-  }, [updateKey]);
-
-  const toggleHandler = () => {
-    console.log('toggle')
-  }
+  }, [updateKey, dateTime]);
 
   const renderDay = (date: any, index: number) => {
     const goal = goalsAndCompletes?.length > 0 ? goalsAndCompletes[0] : undefined;
@@ -78,7 +74,7 @@ const GoalEdit = () => {
 
   const back = () => {
     console.log(`back`)
-    router.push(`/(main)/home`);
+    router.push("/(tabs)/home");
   }
 
   const present = async () => {
@@ -107,7 +103,7 @@ const GoalEdit = () => {
       if (error) console.log(`delete error: `, error)
       else {
         console.log('dismiss')
-        router.push(`/(main)/home`);
+        router.push("/(tabs)/home");
       }
     }
   }
@@ -132,9 +128,11 @@ const GoalEdit = () => {
               goal() &&
               <Text className="text-4xl font-bold">{ getHabitFromId(goal()!.name) }</Text>
             }
-            <Pressable onPress={ back }>
-              <FontAwesome5 name="arrow-left" size={24} color="black" />
-            </Pressable>
+            <Link href={{pathname: "/(tabs)", params: {dateTime: Date.now()}}} asChild>
+              <Pressable onPress={ back }>
+                <FontAwesome5 name="arrow-left" size={24} color="black" />
+              </Pressable>
+            </Link>
           </View>
           <View className="mt-4">
             <Text className="mx-4 text-3xl">Activity</Text>

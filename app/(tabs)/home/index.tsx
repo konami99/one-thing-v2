@@ -1,11 +1,11 @@
 import { setStatusBarHidden } from "expo-status-bar"
-import ScreenWrapper from "../../components/ScreenWrapper"
-import { useAuth } from "../../contexts/AuthContext"
-import { supabase } from "../../lib/supabase"
+import ScreenWrapper from "@/components/ScreenWrapper"
+import { useAuth } from "@/contexts/AuthContext"
+import { supabase } from "@/lib/supabase"
 import { Alert, StyleSheet, Text, View } from "react-native"
-import { hp, wp, getDaysOfCurrentWeek, getCurrentMonth, days } from '../../helpers/common'
-import { theme } from '../../constants/theme'
-import Button from '../../components/Button'
+import { hp, wp, getDaysOfCurrentWeek, getCurrentMonth, days } from '@/helpers/common'
+import { theme } from '@/constants/theme'
+import Button from '@/components/Button'
 import { ScrollView, Pressable } from "react-native"
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { useEffect, useRef, useState } from "react"
@@ -16,13 +16,15 @@ import { getAuthenticatedUser } from "@/services/userService"
 import { User } from "@supabase/supabase-js"
 import RadioButton from "@/components/RadioButton"
 import Goal from "@/components/Goal"
+import { useLocalSearchParams } from "expo-router"
 
-const Home = () => {
+const Tab = () => {
   const sheet = useRef<TrueSheet>(null)
   const [updateKey, setUpdateKey] = useState(0)
   const [goalsAndCompletes, setGoalsAndCompletes] = useState([])
   const { user } = useAuth();
   const currentWeekDates = getDaysOfCurrentWeek();
+  const { dateTime } = useLocalSearchParams<{ dateTime: string }>();
 
   const fetchGoals = async (userId: string) => {
     setGoalsAndCompletes([]);
@@ -37,14 +39,7 @@ const Home = () => {
     if (user?.id) {
       fetchGoals(user.id);
     }
-  }, []);
-  
-  useEffect(() => {
-    if (user?.id) {
-      console.log('fetching goals')
-      fetchGoals(user.id);
-    }
-  }, [updateKey]);
+  }, [updateKey, dateTime]);
   
   const present = async () => {
     await sheet.current?.present();
@@ -226,4 +221,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default Home;
+export default Tab;

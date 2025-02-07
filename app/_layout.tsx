@@ -50,10 +50,10 @@ const MainLayout = ()=>{
 		if (session) {
 			setAuth(session?.user);
 			updateUserData(session?.user); // update user like image, phone, bio
-			router.replace("./home");
+			router.replace("/(tabs)/home")
 		} else {
 			setAuth(null);
-			router.replace('../welcome')
+			router.replace("/welcome")
 		}
 		})
 	}, []);
@@ -64,11 +64,10 @@ const MainLayout = ()=>{
 	}
 
 	return (
-		<Stack 
-			screenOptions={{
-				headerShown: false
-			}}
-		/>
+		<Stack>
+			<Stack.Screen name="(tabs)" options={{headerShown: false, headerTitle: "home screen"}} />
+			<Stack.Screen name="index" options={{headerShown: false}} />
+		</Stack>
 	)
 }
 
