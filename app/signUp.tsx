@@ -99,7 +99,7 @@ const SignUp = () => {
 
         <View style={styles.footer}>
           <Text style={styles.footerText}>
-            Already have an account!
+            Already have an account?
           </Text>
           <Pressable onPress={()=> router.navigate('./login')}>
             <Text style={[styles.footerText]}>Login</Text>

@@ -36,7 +36,7 @@ const WelcomePage = () => {
           />
           <View style={styles.bottomTextContainer}>
             <Text style={styles.loginText}>
-              Already have an account! 
+              Already have an account?
             </Text>
             <Pressable onPress={()=> router.push('./login')}>
               <Text style={[styles.loginText]}>Login</Text>
