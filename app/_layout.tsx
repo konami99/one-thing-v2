@@ -65,7 +65,7 @@ const MainLayout = ()=>{
 
 	return (
 		<Stack>
-			<Stack.Screen name="(tabs)" options={{headerShown: false, headerTitle: "home screen"}} />
+			<Stack.Screen name="(tabs)" options={{headerShown: false}} />
 			<Stack.Screen name="index" options={{headerShown: false}} />
 			<Stack.Screen name="login" options={{headerShown: false}} />
 			<Stack.Screen name="signUp" options={{headerShown: false}} />

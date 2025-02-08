@@ -49,13 +49,6 @@ const Tab = () => {
     await sheet.current?.dismiss();
     setUpdateKey((prevKey) => prevKey + 1);
   }
-  
-  const onLogout = async() => {
-    const { error } = await supabase.auth.signOut();
-    if ( error) {
-      Alert.alert('Sign out', 'Error signing out')
-    }
-  }
 
   const test = () => {
     console.log('rerender')

@@ -165,7 +165,7 @@ const GoalEdit = () => {
             <Pressable onPress={present} className="mx-4 mt-2 py-1 px-4 bg-green-500 rounded-xl flex flex-row items-center justify-between">
               <Text className="font-bold text-xl">
                 { goal() &&
-                    `${getHabitFromId(goal()!.name)} ${goal()!.frequency} times in ${goal()!.frequencyrange} days`  } 
+                    `${getHabitFromId(goal()!.name)} ${goal()!.frequency} ${ goal()!.frequency > 1 ? 'times' : 'time' } ${goal()!.frequencyrange > 1 ? `in ${goal()!.frequencyrange}` : 'a'} ${ goal()!.frequencyrange > 1 ? 'days' : 'day' }`  } 
               </Text>
               <FontAwesome5 name="pencil-alt" size={12} color="black" />
             </Pressable>

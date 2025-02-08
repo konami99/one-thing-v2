@@ -94,7 +94,15 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
   }
 
   const timePluralConverter = () => {
-    return Number(frequency) > 1 ? 'times' : 'time';
+    if (frequency === '1' && frequencyRange === '1') {
+      return 'time a'
+    } if (Number(frequency) > 1 && frequencyRange === '1') {
+      return 'times a'
+    } if (Number(frequency) > 1 && Number(frequencyRange) > 1) {
+      return 'times in'
+    } else { // frequency === 1 and frequencyRange > 1
+      return 'time in'
+    }
   }
 
   const updateHabit = async () => {
@@ -215,6 +223,20 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
   const onChangeMinUnit = (input: string) => {
     setMinUnit(input === '' ? null : input)
   }
+
+  const frequencyItems = [];
+  for (let i = 1; i <= 10; i++) {
+    frequencyItems.push(
+      <Picker.Item key={i} label={i.toString()} value={i.toString()} />
+    );
+  }
+
+  const frequencyRangeItems = [];
+  for (let i = 1; i <= 30; i++) {
+    frequencyRangeItems.push(
+      <Picker.Item key={i} label={i.toString()} value={i.toString()} />
+    );
+  }
   
   return (
     <TrueSheet
@@ -242,12 +264,10 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
               onValueChange={(itemValue, itemIndex) =>
                 setFrequency(itemValue)
               }>
-              <Picker.Item label="1" value="1" />
-              <Picker.Item label="2" value="2" />
-              <Picker.Item label="3" value="3" />
+              {frequencyItems}
             </Picker>
           </View>
-          <Text className="text-2xl">{ timePluralConverter() } in</Text>
+          <Text className="text-2xl">{ timePluralConverter() }</Text>
         </View>
         <View className="flex flex-row items-center mt-4">
           <View className="w-24 bg-green-500 rounded-xl mr-2">
@@ -257,12 +277,10 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
               onValueChange={(itemValue, itemIndex) =>
                 setFrequencyRange(itemValue)
               }>
-              <Picker.Item label="1" value="1" />
-              <Picker.Item label="2" value="2" />
-              <Picker.Item label="3" value="3" />
+              {frequencyRangeItems}
             </Picker>
           </View>
-          <Text className="text-2xl">days</Text>
+          <Text className="text-2xl">{ frequencyRange === '1' ? 'day' : 'days' }</Text>
         </View>
       </View>
 
