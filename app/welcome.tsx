@@ -21,7 +21,7 @@ const WelcomePage = () => {
 
         {/* title */}
         <View style={{gap: 20}}>
-          <Text style={styles.title}>OneThing</Text>
+          <Text style={styles.title}>One Thing</Text>
           <Text style={styles.punchline}>
             Master the Power of One Habit at a Time.
           </Text>
