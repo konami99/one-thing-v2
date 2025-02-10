@@ -1,6 +1,7 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { supabase } from '@/lib/supabase';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 interface RadioButtonProps {
   isOnInit: boolean;
@@ -62,7 +63,9 @@ const RadioButton = ({ isOnInit, goalId, date, style }: RadioButtonProps) => {
 
   return (
     <Pressable className={ style } onPress={ toggleHandler }>
-      <View className={ `h-4 w-4 rounded-lg border-2 border-black-500 ${ isOn ? "bg-black" : "" }`} />
+      {isOn ? <FontAwesome name="star" size={16} />
+      : <View className={ `h-4 w-4 rounded-lg border-2 border-black-500`} />
+      }
     </Pressable>
   )
 }

@@ -14,7 +14,6 @@ import { TrueSheet } from "@lodev09/react-native-true-sheet"
 import HabitFormSheet from "@/components/HabitFormSheet"
 import { getAuthenticatedUser } from "@/services/userService"
 import { User } from "@supabase/supabase-js"
-import RadioButton from "@/components/RadioButton"
 import Goal from "@/components/Goal"
 import { useLocalSearchParams } from "expo-router"
 

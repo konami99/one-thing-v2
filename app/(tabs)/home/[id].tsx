@@ -10,6 +10,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useLocalSearchParams } from 'expo-router';
 import RadioButton from "@/components/RadioButton";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { TrueSheet } from "@lodev09/react-native-true-sheet";
 import HabitFormSheet from "@/components/HabitFormSheet";
 import { getHabitFromId } from "@/helpers/common";
@@ -63,7 +64,7 @@ const GoalEdit = () => {
         return <RadioButton key={ index } isOnInit={ false } goalId={ goal?.id } date={ date.dateString } style="mt-0.5" />
       }
       else if (!dates.includes(date.dateString) && completed_dates && completed_dates.includes(date.dateString)) {
-        return <View className={ `mt-0.5 h-4 w-4 rounded-lg border-2 border-gray-500 bg-gray-500`} />
+        return <FontAwesome name="star" size={16} style={{color: 'gray'}} />
       }
     }
 

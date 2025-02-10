@@ -15,26 +15,21 @@ const Goal = ({ goal, currentWeekDates }: GoalProps) => {
 
   return (
     <Link href={{pathname: '/(tabs)/home/[id]', params: {id: goal.id, dateTime: Date.now()}}} asChild>
-      <Pressable className="bg-green-500 rounded-xl h-32 flex flex-row justify-between mr-4 mt-4">
-        <View className="ml-4">
-          {/*
-          <View className="mt-6">
-            <Text>15 x</Text>
-          </View>
-          */}
-          <View className="mt-14">
+      <Pressable className="bg-green-500 rounded-xl min-h-[6rem] flex flex-col justify-between mr-4 mt-4">
+        <View className="flex flex-row justify-between w-[65%] ml-[6.5rem]">
+          {currentWeekDates.map((date, index) => {
+            const completed = completed_dates === null ? false : completed_dates.includes(date);
+            return <RadioButton key={ index } isOnInit={ completed } goalId={ goal?.id } date={ date } style="mt-6" />
+          })}
+        </View>
+        <View className="ml-4 mb-4 mt-8">
+          <View>
             <Text className="text-lg font-bold">{ getHabitFromId(goal.name) }</Text>
             {
               goal?.mincount && goal?.minunit &&
               <Text><Text className="font-bold">{ goal.mincount }</Text> { goal.minunit }</Text>
             }
           </View>
-        </View>
-        <View className="flex flex-row justify-between w-[65%] mr-4">
-          {currentWeekDates.map((date, index) => {
-            const completed = completed_dates === null ? false : completed_dates.includes(date);
-            return <RadioButton key={ index } isOnInit={ completed } goalId={ goal?.id } date={ date } style="mt-6" />
-          })}
         </View>
       </Pressable>
     </Link>

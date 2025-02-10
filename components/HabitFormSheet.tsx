@@ -90,6 +90,16 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
       setFrequencyRange(goal.frequencyrange.toString())
       setMinCount(goal.mincount)
       setMinUnit(goal.minunit)
+    } else {
+      setActivityInput('')
+      scrollToItem(0)
+      setHabit('')
+      setHabitId(0)
+      setButtonText('CREATE')
+      setFrequency('')
+      setFrequencyRange('')
+      setMinCount(null)
+      setMinUnit(null)
     }
   }
 
