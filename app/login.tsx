@@ -75,10 +75,11 @@ const Login = () => {
             placeholderTextColor={theme.colors.textLight}
             onChangeText={(value: any) => passwordRef.current=value}
           />
+          {/*
           <Text style={styles.forgotPassword}>
             Forgot Password?
           </Text>
-
+          */}
           {/* button */}
           <Button textStyle={"bold"} buttonStyle={{marginHorizontal: wp(3)}} title="Login" loading={loading} onPress={onSubmit} />
         </View>
