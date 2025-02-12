@@ -1,39 +1,77 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
+import { View, Text } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { Stack, useRouter } from 'expo-router'
+import { AuthProvider, useAuth } from '../contexts/AuthContext'
+import { supabase } from '../lib/supabase'
+import { getUserData } from '../services/userService'
+import { LogBox } from 'react-native';
+import NetInfo from '@react-native-community/netinfo';
+import "../global.css"
 
-import { useColorScheme } from '@/hooks/useColorScheme';
+LogBox.ignoreLogs(['Warning: TNodeChildrenRenderer', 'Warning: MemoizedTNodeRenderer', 'Warning: TRenderEngineProvider']); // Ignore log notification by message
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
-
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
+const _layout = () => {
+	const [isConnected, setConnected] = useState(true);
 
   useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
+    const unsubscribe = NetInfo.addEventListener((state) => {
+      setConnected(state.isConnected);
+    });
 
-  if (!loaded) {
-    return null;
-  }
+    return () => unsubscribe();
+  }, []);
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
-  );
+    <AuthProvider>
+      
+			{
+				isConnected ? <MainLayout /> : (
+        <View className='flex flex-1 w-full bottom-0 bg-[#b52424] absolute items-center justify-center pb-1.5 px-2'>
+					<Text className='text-[#fff] text-center font-bold text-2xl'>
+						You are offline
+					</Text>
+					<Text className='text-[#fff] text-center'>
+						Try connect with internet or come back later
+					</Text>
+        </View>)
+			}
+    </AuthProvider>
+  )
 }
+
+const MainLayout = ()=>{
+	const {setAuth, setUserData} = useAuth();
+	const router = useRouter();
+
+	useEffect(() => {
+		// triggers automatically when auth state changes
+		supabase.auth.onAuthStateChange((_event, session) => {
+		console.log('session: ', session);
+		if (session) {
+			setAuth(session?.user);
+			updateUserData(session?.user); // update user like image, phone, bio
+			router.replace("/(tabs)/home")
+		} else {
+			setAuth(null);
+			router.replace("/welcome")
+		}
+		})
+	}, []);
+
+	const updateUserData = async (user: any)=>{
+		let res = await getUserData(user.id);
+		if(res.success) setUserData(res.data);
+	}
+
+	return (
+		<Stack>
+			<Stack.Screen name="(tabs)" options={{headerShown: false}} />
+			<Stack.Screen name="index" options={{headerShown: false}} />
+			<Stack.Screen name="login" options={{headerShown: false}} />
+			<Stack.Screen name="signUp" options={{headerShown: false}} />
+			<Stack.Screen name="welcome" options={{headerShown: false}} />
+		</Stack>
+	)
+}
+
+export default _layout

@@ -1,22 +1,23 @@
 {
   "expo": {
-    "name": "one-thing-v2",
+    "name": "One Thing",
     "slug": "one-thing-v2",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "scheme": "onething",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.konami99.onething.v2"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.konami99.onething-v2"
+      "package": "com.konami99.onething.v2"
     },
     "web": {
       "bundler": "metro",
@@ -31,7 +32,7 @@
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "backgroundColor": "#97d077"
         }
       ]
     ],
@@ -45,6 +46,7 @@
       "eas": {
         "projectId": "9e1bbf03-0e45-4720-8945-14d9ab2bf5f2"
       }
-    }
+    },
+    "owner": "konami99"
   }
 }
