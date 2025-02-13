@@ -251,6 +251,8 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
   return (
     <TrueSheet
       ref={sheet}
+      edgeToEdge={true}
+      keyboardMode="pan"
       sizes={['large']}
       cornerRadius={24}
       style={{"padding": 24}}
