@@ -49,11 +49,6 @@ const Tab = () => {
     setUpdateKey((prevKey) => prevKey + 1);
   }
 
-  const test = () => {
-    console.log('rerender')
-    return getCurrentMonth();
-  }
-
   return (
     <ScreenWrapper bg={"white"}>
       <View style={styles.container}>
@@ -67,7 +62,7 @@ const Tab = () => {
           </Pressable>
         </View>
         <View className="flex flex-row justify-between">
-          <Text>{ test() }</Text>
+          <Text>{ getCurrentMonth() }</Text>
           <View className="flex flex-row justify-between w-[63%] mr-8">
             {currentWeekDates.map((date, index) => (
               <View key={index}>

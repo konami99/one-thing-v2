@@ -14,23 +14,7 @@ const RadioButton = ({ isOnInit, goalId, date, style }: RadioButtonProps) => {
   const [isOn, setIsOn] = useState(isOnInit);
   const firstUpdate = useRef(true);
 
-  /*
-  useLayoutEffect(() => {
-    if (firstUpdate.current) {
-      firstUpdate.current = false;
-      return;
-    }
-
-    if (isOn) {
-      insertComplete();
-    } else {
-      deleteComplete();
-    }
-  });
-  */
-
   const insertComplete = async () => {
-    console.log('inserting');
     const { error } = await supabase
       .from('Complete')
       .insert({
@@ -40,7 +24,6 @@ const RadioButton = ({ isOnInit, goalId, date, style }: RadioButtonProps) => {
   }
 
   const deleteComplete = async () => {
-    console.log('deleting');
     const { error } = await supabase
       .from('Complete')
       .delete()
@@ -49,9 +32,6 @@ const RadioButton = ({ isOnInit, goalId, date, style }: RadioButtonProps) => {
   }
 
   const toggleHandler = async () => {
-    console.log('goalId', goalId);
-    console.log('date', date);
-
     if (isOn) {
       deleteComplete();
     } else {
