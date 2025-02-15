@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity, Pressable, Alert } from 'react-native'
+import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity, Pressable, Alert, ScrollView } from 'react-native'
 import React, { useRef, useState } from 'react'
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import ScreenWrapper from '../components/ScreenWrapper';
@@ -46,69 +46,69 @@ const SignUp = () => {
       },
     });
 
-    // console.log('session: ', session);
-    // console.log('error: ', error);
-
     if (error) Alert.alert('Sign up', error.message)
     setLoading(false)
   }
 
   return (
     <ScreenWrapper bg={'white'}>
-      <StatusBar style="dark" />
-      <View style={styles.container}>
-        {/* back button */}
-        <View>
-          <BackButton router={router} />
-        </View>
+      <ScrollView
+        showsHorizontalScrollIndicator={ false }
+        showsVerticalScrollIndicator={ false }
+        >
+        <StatusBar style="dark" />
+        <View style={styles.container}>
+          {/* back button */}
+          <View>
+            <BackButton router={router} />
+          </View>
 
-        {/* welcome */}
-        <View>
-          <Text style={styles.welcomeText}>Lets's </Text>
-          <Text style={styles.welcomeText}>Get Started</Text>
-        </View>
+          {/* welcome */}
+          <View>
+            <Text style={styles.welcomeText}>Lets's </Text>
+            <Text style={styles.welcomeText}>Get Started</Text>
+          </View>
 
-        {/* form */}
-        <View style={styles.form}>
-          <Text style={{fontSize: hp(1.5), color: theme.colors.text}}>
-            Please fill the details to create an account
-          </Text>
-          <Input
-            icon={<Icon name="user" size={26} strokeWidth={1.6} />}
-            placeholder='Enter your name'
-            placeholderTextColor={theme.colors.textLight}
-            onChangeText={(value: any)=> nameRef.current=value}
-          />
-          <Input
-            icon={<Icon name="mail" size={26} strokeWidth={1.6} />}
-            placeholder='Enter your email'
-            placeholderTextColor={theme.colors.textLight}
-            onChangeText={(value: any) => emailRef.current=value}
-          />
-          <Input 
-            icon={<Icon name="lock" size={26} strokeWidth={1.6} />}
-            secureTextEntry
-            placeholder='Enter your password'
-            placeholderTextColor={theme.colors.textLight}
-            onChangeText={(value:any) => passwordRef.current=value}
-          />
+          {/* form */}
+          <View style={styles.form}>
+            <Text style={{fontSize: hp(1.5), color: theme.colors.text}}>
+              Please fill the details to create an account
+            </Text>
+            <Input
+              icon={<Icon name="user" size={26} strokeWidth={1.6} />}
+              placeholder='Enter your name'
+              placeholderTextColor={theme.colors.textLight}
+              onChangeText={(value: any)=> nameRef.current=value}
+            />
+            <Input
+              icon={<Icon name="mail" size={26} strokeWidth={1.6} />}
+              placeholder='Enter your email'
+              placeholderTextColor={theme.colors.textLight}
+              onChangeText={(value: any) => emailRef.current=value}
+            />
+            <Input 
+              icon={<Icon name="lock" size={26} strokeWidth={1.6} />}
+              secureTextEntry
+              placeholder='Enter your password'
+              placeholderTextColor={theme.colors.textLight}
+              onChangeText={(value:any) => passwordRef.current=value}
+            />
 
-          {/* button */}
-          <Button textStyle={"bold"} buttonStyle={{marginHorizontal: wp(3)}}  title="Sign up" loading={loading} onPress={onSubmit} />
-        </View>
+            {/* button */}
+            <Button textStyle={"bold"} buttonStyle={{marginHorizontal: wp(3)}}  title="Sign up" loading={loading} onPress={onSubmit} />
+          </View>
 
-        <View style={styles.footer}>
-          <Text style={styles.footerText}>
-            Already have an account?
-          </Text>
-          <Pressable onPress={()=> router.navigate('./login')}>
-            <Text style={[styles.footerText]}>Login</Text>
-          </Pressable>
+          <View style={styles.footer}>
+            <Text style={styles.footerText}>
+              Already have an account?
+            </Text>
+            <Pressable onPress={()=> router.navigate('./login')}>
+              <Text style={[styles.footerText]}>Login</Text>
+            </Pressable>
+          </View>
+          
         </View>
-        
-      </View>
-      
-      
+      </ScrollView>
     </ScreenWrapper>
   )
 }

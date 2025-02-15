@@ -29,7 +29,6 @@ const GoalEdit = () => {
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   const getDate = (count: number) => {
-    console.log('getdate')
     const date = new Date(INITIAL_DATE);
     const newDate = date.setDate(date.getDate() + count);
     return CalendarUtils.getCalendarDateString(newDate);
@@ -74,7 +73,6 @@ const GoalEdit = () => {
   };
 
   const back = () => {
-    console.log(`back`)
     router.push("/(tabs)/home");
   }
 
@@ -92,7 +90,6 @@ const GoalEdit = () => {
   }
 
   const deleteHabit = async () => {
-    console.log('goalsAndCompletes', goalsAndCompletes.length)
     if (goalsAndCompletes.length > 0) {
       const goal = goalsAndCompletes[0];
 
@@ -103,7 +100,6 @@ const GoalEdit = () => {
 
       if (error) console.log(`delete error: `, error)
       else {
-        console.log('dismiss')
         router.push("/(tabs)/home");
       }
     }

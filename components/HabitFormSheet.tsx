@@ -43,7 +43,6 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
       if (goal.habitid === 0) {
         setActivityInput(name)
       } else {
-        console.log('LLLLLL', goal)
         setActivityInput('')
         scrollToItem(goal.habitid)
       }
@@ -72,8 +71,6 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
   */
 
   const handleDismiss = () => {
-    console.log('dismiss', goal)
-
     var name = goal ? goal.name : '';
     
     if (name.length > 0) {
@@ -155,46 +152,24 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
   }
 
   const onUpdate = async() => {
-    console.log('SUBMIT')
-    console.log('habit', habit)
-    console.log('frequency', frequency);
-    console.log('frequencyRange', frequencyRange)
-    console.log('minCount', minCount);
-    console.log('minUnit', minUnit)
-
     if (habit.trim() === '') {
-      console.log('habit is empty')
     } else {
-      console.log('push to supa')
       const error = await updateHabit(); 
-      console.log('error', error)
       if (error) {
 
       } else {
-        // resetForm();
         await dismiss();
       }
     }
   }
 
   const onCreate = async() => {
-    console.log('SUBMIT')
-    console.log('habit', habit)
-    console.log('frequency', frequency);
-    console.log('frequencyRange', frequencyRange)
-    console.log('minCount', minCount);
-    console.log('minUnit', minUnit)
-
     if (habit.trim() === '') {
-      console.log('habit is empty')
     } else {
-      console.log('push to supa')
       const error = await createHabit(); 
-      console.log('error', error)
       if (error) {
 
       } else {
-        // resetForm();
         await dismiss();
       }
     }
@@ -252,8 +227,8 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
     <TrueSheet
       ref={sheet}
       edgeToEdge={true}
-      keyboardMode="pan"
       sizes={['large']}
+      keyboardMode="pan"
       cornerRadius={24}
       style={{"padding": 24}}
       onDismiss={ handleDismiss }
@@ -325,17 +300,6 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
           <Text className='text-white text-lg font-bold'>{ buttonText }</Text>
         </Pressable>
       </View>
-
-      {/*
-      <Button 
-        textStyle={"bold"}
-        title="Getting Started" 
-        buttonStyle={{marginHorizontal: wp(3)}} 
-        onPress={onSubmit}
-      />
-      
-      <Button textStyle={"bold"} buttonStyle={{marginHorizontal: wp(3)}} onPress={dismiss} title="Dismiss" />
-      */}
     </TrueSheet>
   )
 }
