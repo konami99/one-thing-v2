@@ -76,27 +76,52 @@ export const habits: ItemData[] = [
   {
     id: '1',
     type: 'Text',
-    title: 'Drink water',
+    title: 'Play 🎸',
   },
   {
     id: '2',
     type: 'Text',
-    title: 'Brush teeth',
+    title: 'Draw a 🖼️',
   },
   {
     id: '3',
     type: 'Text',
-    title: 'Study',
+    title: 'Play ⚽',
   },
   {
     id: '4',
     type: 'Text',
-    title: 'Make bed',
+    title: 'Drink water',
   },
   {
     id: '5',
     type: 'Text',
+    title: 'Brush teeth',
+  },
+  {
+    id: '6',
+    type: 'Text',
+    title: 'Study',
+  },
+  {
+    id: '7',
+    type: 'Text',
+    title: 'Make bed',
+  },
+  {
+    id: '8',
+    type: 'Text',
     title: 'Walk',
+  },
+  {
+    id: '9',
+    type: 'Text',
+    title: 'Write journal',
+  },
+  {
+    id: '10',
+    type: 'Text',
+    title: 'Learn a new word',
   },
 ];
 

@@ -64,15 +64,8 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
     });
   };
 
-  /*
-  const resetForm = () => {
-
-  }
-  */
-
   const handleDismiss = () => {
     var name = goal ? goal.name : '';
-    
     if (name.length > 0) {
       if (goal.habitid === 0) {
         setActivityInput(name)
@@ -93,8 +86,8 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
       setHabit('')
       setHabitId(0)
       setButtonText('CREATE')
-      setFrequency('')
-      setFrequencyRange('')
+      setFrequency('1')
+      setFrequencyRange('1')
       setMinCount(null)
       setMinUnit(null)
     }
@@ -124,7 +117,6 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
         minUnit: minUnit,
         color: 'white',
         enabled: true,
-        //userId: user.id,
       })
       .eq('id', goal.id)
 
@@ -145,7 +137,6 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
         count: 0,
         color: 'white',
         enabled: true,
-        //userId: user.id,
       })
 
     return error;
@@ -165,10 +156,11 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
 
   const onCreate = async() => {
     if (habit.trim() === '') {
+
     } else {
       const error = await createHabit(); 
       if (error) {
-
+        console.log('error', error)
       } else {
         await dismiss();
       }
@@ -194,7 +186,7 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
           setActivityInput('');
           scrollToItem(item.id)
         }}
-        className={`border-4 border-green-500 mr-4 rounded-full w-36 h-14 flex justify-center items-center ${ habitId === Number(item.id) ? 'bg-green-500' : 'white' }`}>
+        className={`border-4 border-green-500 mr-4 rounded-full px-4 min-w-36 h-14 flex justify-center items-center ${ habitId === Number(item.id) ? 'bg-green-500' : 'white' }`}>
       <Text className="text-xl">{item.title}</Text>
     </Pressable>
 
