@@ -128,3 +128,19 @@ export const habits: ItemData[] = [
 export const getHabitFromId = (id: string): string => {
   return habits.find((habit: ItemData) => habit.id === id)?.title || id
 }
+
+export const colorCodes = [
+  '#fbcba7',
+  '#c0a7fb',
+  '#fba7a7',
+  '#bcfcdd',
+  '#a7e3fb',
+  '#a7b3fb',
+  '#e2fba7',
+  '#fbe3a7',
+]
+
+export const getRandomColor = () => {
+  const randomIndex = Math.floor(Math.random() * colorCodes.length);
+  return colorCodes[randomIndex];
+}
