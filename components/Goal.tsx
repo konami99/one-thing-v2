@@ -15,7 +15,7 @@ const Goal = ({ goal, currentWeekDates }: GoalProps) => {
 
   return (
     <Link href={{pathname: '/(tabs)/home/[id]', params: {id: goal.id, dateTime: Date.now()}}} asChild>
-      <Pressable style={{ backgroundColor: goal.color }} className="rounded-xl min-h-[6rem] flex flex-col justify-between mr-4 mt-4">
+      <Pressable style={{ backgroundColor: goal.color }} className="rounded-xl min-h-[6rem] flex flex-col justify-between mt-4">
         <View className="flex flex-row justify-between w-[65%] ml-[6.5rem]">
           {currentWeekDates.map((date, index) => {
             const completed = completed_dates === null ? false : completed_dates.includes(date);

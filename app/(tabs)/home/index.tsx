@@ -63,7 +63,7 @@ const Tab = () => {
         </View>
         <View className="flex flex-row justify-between">
           <Text>{ getCurrentMonth() }</Text>
-          <View className="flex flex-row justify-between w-[63%] mr-8">
+          <View className="flex flex-row justify-between w-[66%] mr-6">
             {currentWeekDates.map((date, index) => (
               <View key={index}>
                 <Text>{ date.split('-')[2] }</Text>
