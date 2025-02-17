@@ -159,14 +159,14 @@ const GoalEdit = () => {
           </View>
           <View className="mt-4">
             <Text className="mx-4 text-3xl">Goal</Text>
-            <Pressable onPress={present} className="mx-4 mt-2 py-1 px-4 bg-green-500 rounded-xl flex flex-row items-center justify-between">
+            <Pressable onPress={present} style={{ backgroundColor: goal()?.color }} className="mx-4 mt-2 py-1 px-4 rounded-xl flex flex-row items-center justify-between">
               <Text className="font-bold text-xl">
                 { goal() &&
                     `${getHabitFromId(goal()!.name)} ${goal()!.frequency} ${ goal()!.frequency > 1 ? 'times' : 'time' } ${goal()!.frequencyrange > 1 ? `in ${goal()!.frequencyrange}` : 'a'} ${ goal()!.frequencyrange > 1 ? 'days' : 'day' }`  } 
               </Text>
               <FontAwesome5 name="pencil-alt" size={12} color="black" />
             </Pressable>
-            <Pressable onPress={present} className="mx-4 mt-2 py-1 px-4 bg-green-500 rounded-xl flex flex-row items-center justify-between">
+            <Pressable onPress={present} style={{ backgroundColor: goal()?.color }} className="mx-4 mt-2 py-1 px-4 rounded-xl flex flex-row items-center justify-between">
               <Text className="font-bold text-xl">
                 { smallestUnit() }
               </Text>
@@ -182,12 +182,12 @@ const GoalEdit = () => {
             <View>
               <Text className="mx-4 mb-4 text-3xl">Delete Habit?</Text>
               <View className="flex flex-row justify-start items-center">
-                <Pressable onPress={ deleteHabit } className="mx-4 py-1 h-16 w-28 px-4 bg-green-500 rounded-full flex flex-row items-center justify-center">
+                <Pressable onPress={ deleteHabit } style={{ backgroundColor: goal()?.color }} className="mx-4 py-1 h-16 w-28 px-4 rounded-full flex flex-row items-center justify-center">
                   <Text className="font-bold text-xl">
                     YES
                   </Text>
                 </Pressable>
-                <Pressable onPress={ () => setConfirmDelete(false) } className="mx-4 py-1 h-16 w-28 px-4 bg-green-500 rounded-full flex flex-row items-center justify-center">
+                <Pressable onPress={ () => setConfirmDelete(false) } style={{ backgroundColor: goal()?.color }} className="mx-4 py-1 h-16 w-28 px-4 rounded-full flex flex-row items-center justify-center">
                   <Text className="font-bold text-xl">
                     NO
                   </Text>
@@ -195,7 +195,7 @@ const GoalEdit = () => {
               </View>
             </View>
             : <View className="flex flex-row items-center justify-center">
-              <Pressable onPress={ () => setConfirmDelete(true) } className="mx-4 py-1 h-16 w-52 px-4 bg-green-500 rounded-full flex flex-row items-center justify-center">
+              <Pressable onPress={ () => setConfirmDelete(true) } style={{ backgroundColor: goal()?.color }} className="mx-4 py-1 h-16 w-52 px-4 rounded-full flex flex-row items-center justify-center">
                 <Text className="font-bold text-xl">
                   DELETE HABIT
                 </Text>

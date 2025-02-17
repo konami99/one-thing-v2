@@ -8,8 +8,8 @@ import { TrueSheet } from "@lodev09/react-native-true-sheet"
 import { Picker } from '@react-native-picker/picker';
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../contexts/AuthContext"
-import { habits } from "@/helpers/common";
-import { ItemData } from "@/helpers/common";
+import { habits, ItemData, getRandomColor, colorCodes } from "@/helpers/common";
+import { Link } from "expo-router";
 
 type HabitFormSheetProps = {
   sheet: React.RefObject<TrueSheet>;
@@ -21,6 +21,8 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
   const flatListRef = useRef(null);
   const { user } = useAuth();
 
+  const [color, setColor] = useState('');
+  const [page, setPage] = useState(1);
   const [habit, setHabit] = useState('');
   const [habitId, setHabitId] = useState(0);
 
@@ -64,15 +66,20 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
     });
   };
 
-  /*
-  const resetForm = () => {
-
+  const nextPage = () => {
+    setPage(prevCount => prevCount + 1);
   }
-  */
+
+  const previousPage = () => {
+    if (page > 1) setPage(prevCount => prevCount - 1);
+  }
+
+  const handlePresent = () => {
+    goal ? setColor(goal.color) : setColor(getRandomColor());
+  }
 
   const handleDismiss = () => {
     var name = goal ? goal.name : '';
-    
     if (name.length > 0) {
       if (goal.habitid === 0) {
         setActivityInput(name)
@@ -87,17 +94,19 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
       setFrequencyRange(goal.frequencyrange.toString())
       setMinCount(goal.mincount)
       setMinUnit(goal.minunit)
+      setColor(goal.color)
     } else {
       setActivityInput('')
       scrollToItem(0)
       setHabit('')
       setHabitId(0)
       setButtonText('CREATE')
-      setFrequency('')
-      setFrequencyRange('')
+      setFrequency('1')
+      setFrequencyRange('1')
       setMinCount(null)
       setMinUnit(null)
     }
+    setPage(1);
   }
 
   const timePluralConverter = () => {
@@ -122,9 +131,8 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
         frequencyRange,
         minCount: minCount,
         minUnit: minUnit,
-        color: 'white',
+        color,
         enabled: true,
-        //userId: user.id,
       })
       .eq('id', goal.id)
 
@@ -143,9 +151,8 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
         minUnit,
         streak: 0,
         count: 0,
-        color: 'white',
+        color,
         enabled: true,
-        //userId: user.id,
       })
 
     return error;
@@ -165,10 +172,11 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
 
   const onCreate = async() => {
     if (habit.trim() === '') {
+
     } else {
       const error = await createHabit(); 
       if (error) {
-
+        console.log('error', error)
       } else {
         await dismiss();
       }
@@ -194,7 +202,8 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
           setActivityInput('');
           scrollToItem(item.id)
         }}
-        className={`border-4 border-green-500 mr-4 rounded-full w-36 h-14 flex justify-center items-center ${ habitId === Number(item.id) ? 'bg-green-500' : 'white' }`}>
+        style={{ borderColor: color, backgroundColor: habitId === Number(item.id) ? color : 'white' }}
+        className={`border-4 mr-4 rounded-full px-4 min-w-36 h-14 flex justify-center items-center`}>
       <Text className="text-xl">{item.title}</Text>
     </Pressable>
 
@@ -222,6 +231,15 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
       <Picker.Item key={i} label={i.toString()} value={i.toString()} />
     );
   }
+
+  const showColorPanel = () => {
+    setPage(2);
+  }
+
+  const changeColor = (colorCode: string) => {
+    setColor(colorCode);
+    setPage(1);
+  }
   
   return (
     <TrueSheet
@@ -232,74 +250,109 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
       cornerRadius={24}
       style={{"padding": 24}}
       onDismiss={ handleDismiss }
+      onPresent={ handlePresent }
     >
-      <Text className="mb-[15px] text-4xl">I want to *</Text>
-      <FlatList
-        ref={flatListRef}
-        initialScrollIndex={0}
-        data={habits}
-        horizontal
-        renderItem={renderItem}
-        showsHorizontalScrollIndicator={false}
-        keyExtractor={ item => item.id }
-      />
-      <View>
-        <View className="flex flex-row items-center mt-4">
-          <View className="w-24 bg-green-500 rounded-xl mr-2">
-            <Picker
-              selectedValue={frequency}
-              onValueChange={(itemValue, itemIndex) =>
-                setFrequency(itemValue)
-              }>
-              {frequencyItems}
-            </Picker>
+      { 
+        page === 1 &&
+        <>
+          <View className="flex flex-row justify-between">
+            <Text className="my-4 text-4xl">I want to *</Text>
+            <Pressable onPress={ showColorPanel } style={{ backgroundColor: color, borderColor: color }} className={`my-auto rounded-full w-8 h-8`}>
+            </Pressable>
           </View>
-          <Text className="text-2xl">{ timePluralConverter() }</Text>
-        </View>
-        <View className="flex flex-row items-center mt-4">
-          <View className="w-24 bg-green-500 rounded-xl mr-2">
-            <Picker
-              className="w-24 bg-green-500 rounded-xl mr-2"
-              selectedValue={frequencyRange}
-              onValueChange={(itemValue, itemIndex) =>
-                setFrequencyRange(itemValue)
-              }>
-              {frequencyRangeItems}
-            </Picker>
+          <FlatList
+            ref={flatListRef}
+            initialScrollIndex={0}
+            data={habits}
+            horizontal
+            renderItem={renderItem}
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={ item => item.id }
+          />
+          <View>
+            <View className="flex flex-row items-center mt-4">
+              <View className="w-24 rounded-xl mr-2" style={{ backgroundColor: color }}>
+                <Picker
+                  selectedValue={frequency}
+                  onValueChange={(itemValue, itemIndex) =>
+                    setFrequency(itemValue)
+                  }>
+                  {frequencyItems}
+                </Picker>
+              </View>
+              <Text className="text-2xl">{ timePluralConverter() }</Text>
+            </View>
+            <View className="flex flex-row items-center mt-4">
+              <View className="w-24 rounded-xl mr-2" style={{ backgroundColor: color }}>
+                <Picker
+                  className="w-24 rounded-xl mr-2"
+                  selectedValue={frequencyRange}
+                  onValueChange={(itemValue, itemIndex) =>
+                    setFrequencyRange(itemValue)
+                  }>
+                  {frequencyRangeItems}
+                </Picker>
+              </View>
+              <Text className="text-2xl">{ frequencyRange === '1' ? 'day' : 'days' }</Text>
+            </View>
           </View>
-          <Text className="text-2xl">{ frequencyRange === '1' ? 'day' : 'days' }</Text>
-        </View>
-      </View>
 
-      <View className="mt-8">
-        <Text className="mb-[15px] text-4xl">Define a</Text>
-        <Text className="mb-[15px] text-4xl leading-none">smallest unit</Text>
-        <View>
-          <TextInput
-            value={minCount?.toString()}
-            maxLength={3}
-            keyboardType="numeric"
-            onChangeText={ onChangeMinCount }
-            className="bg-slate-100 mr-4 rounded-lg w-full h-14 pl-2 text-xl"
-            placeholder={ 'i.e. 2' }
-          />
-        </View>
-        <View className="mt-3">
-          <TextInput
-            value={minUnit?.toString()}
-            maxLength={20}
-            onChangeText={ onChangeMinUnit }
-            className="bg-slate-100 mr-4 rounded-lg w-full h-14 pl-2 text-xl"
-            placeholder={ 'i.e. Minutes' }
-          />
-        </View>
-      </View>
+          <View className="mt-8">
+            <Text className="mb-[15px] text-4xl">Define a</Text>
+            <Text className="mb-[15px] text-4xl leading-none">smallest unit</Text>
+            <View>
+              <TextInput
+                value={minCount?.toString()}
+                maxLength={3}
+                keyboardType="numeric"
+                onChangeText={ onChangeMinCount }
+                className="bg-slate-100 mr-4 rounded-lg w-full h-14 pl-2 text-xl"
+                placeholder={ 'i.e. 2' }
+              />
+            </View>
+            <View className="mt-3">
+              <TextInput
+                value={minUnit?.toString()}
+                maxLength={20}
+                onChangeText={ onChangeMinUnit }
+                className="bg-slate-100 mr-4 rounded-lg w-full h-14 pl-2 text-xl"
+                placeholder={ 'i.e. Minutes' }
+              />
+            </View>
+          </View>
 
-      <View className="flex flex-row items-center justify-center mt-8">
-        <Pressable className="flex flex-row items-center justify-center h-14 w-1/3 rounded-full bg-green-500" onPress={ goal ? onUpdate : onCreate }>
-          <Text className='text-white text-lg font-bold'>{ buttonText }</Text>
-        </Pressable>
-      </View>
+          <View className="flex flex-row items-center justify-center mt-8">
+            <Pressable style={{ backgroundColor: color }} className="flex flex-row items-center justify-center h-14 w-1/3 rounded-full" onPress={ goal ? onUpdate : onCreate }>
+              <Text className='text-white text-lg font-bold'>{ buttonText }</Text>
+            </Pressable>
+          </View>
+        </>
+      }
+      {
+        page === 2 &&
+        <>
+          <View>
+            <View className="my-4 flex flex-row flex-row-reverse justify-between">
+              <Pressable onPress={ previousPage }>
+                <FontAwesome5 name="arrow-left" size={24} color="black" />
+              </Pressable>
+            </View>
+            <View className="flex-1 flex-row flex-wrap pt-6">
+              {
+                colorCodes.map((colorCode, index) => {
+                  return (
+                    <View key={index} className="w-1/2 items-center my-4">
+                      <Pressable onPress={ () => changeColor(colorCode) } style={{ backgroundColor: colorCode }} className={ `w-20 h-20 rounded-full ${ colorCode == color ? 'border-black border-4 border-solid' : '' }` }>
+                
+                      </Pressable>
+                    </View>
+                  )
+                })
+              }
+            </View>
+          </View>
+        </>
+      }
     </TrueSheet>
   )
 }
