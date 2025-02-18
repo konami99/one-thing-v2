@@ -3,7 +3,7 @@ import ScreenWrapper from "@/components/ScreenWrapper"
 import { useAuth } from "@/contexts/AuthContext"
 import { supabase } from "@/lib/supabase"
 import { Alert, StyleSheet, Text, View } from "react-native"
-import { hp, wp, getDaysOfCurrentWeek, getCurrentMonth, days } from '@/helpers/common'
+import { hp, wp, getDaysOfCurrentWeek, getToday, getCurrentMonth, days } from '@/helpers/common'
 import { theme } from '@/constants/theme'
 import Button from '@/components/Button'
 import { ScrollView, Pressable } from "react-native"
@@ -64,12 +64,14 @@ const Tab = () => {
         <View className="flex flex-row justify-between">
           <Text>{ getCurrentMonth() }</Text>
           <View className="flex flex-row justify-between w-[66%] mr-6">
-            {currentWeekDates.map((date, index) => (
-              <View key={index}>
-                <Text>{ date.split('-')[2] }</Text>
-                <Text>{ days[new Date(date).getDay()] }</Text>
+            {currentWeekDates.map((date, index) => {
+              const today = getToday().toString();
+
+              return <View key={index}>
+                <Text className={ `${today == date.split('-')[2] ? 'font-bold' : ''}` }>{ date.split('-')[2] }</Text>
+                <Text className={ `${today == date.split('-')[2] ? 'font-bold' : ''}` }>{ days[new Date(date).getDay()] }</Text>
               </View>
-            ))}
+            })}
           </View>
         </View>
         <ScrollView className="mt-2 mb-6"

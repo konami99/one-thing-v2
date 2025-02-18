@@ -42,6 +42,10 @@ export const getCurrentMonth = () => {
   return months[currentDate.getMonth()];
 }
 
+export const getToday = () => {
+  return new Date().getDate();
+}
+
 const months = [
   "January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"
