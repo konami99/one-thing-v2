@@ -149,12 +149,6 @@ const GoalEdit = () => {
                   },
                 }
               }}
-              /*
-              renderHeader={ (date: DateData)  => {
-                console.log(date)
-                return <Text>ere</Text>
-              }}
-              */
             />
           </View>
           <View className="mt-4">
