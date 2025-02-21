@@ -72,10 +72,6 @@ const GoalEdit = () => {
     </View>
   };
 
-  const back = () => {
-    router.push("/(tabs)/home");
-  }
-
   const present = async () => {
     await sheet.current?.present();
   }
@@ -125,10 +121,8 @@ const GoalEdit = () => {
               goal() &&
               <Text className="text-4xl font-bold">{ getHabitFromId(goal()!.name) }</Text>
             }
-            <Link href={{pathname: "/(tabs)", params: {dateTime: Date.now()}}} asChild>
-              <Pressable onPress={ back }>
-                <FontAwesome5 name="arrow-left" size={24} color="black" />
-              </Pressable>
+            <Link href={{pathname: "/(tabs)/home", params: {dateTime: Date.now()}}} asChild>
+              <FontAwesome5 name="arrow-left" size={24} color="black" />
             </Link>
           </View>
           <View className="mt-4">
