@@ -42,7 +42,7 @@ const RadioButton = ({ isOnInit, goalId, date, style }: RadioButtonProps) => {
   }
 
   return (
-    <Pressable className={ style } onPress={ toggleHandler }>
+    <Pressable className={ style } onPress={ toggleHandler } hitSlop={ 20 }>
       {isOn ? <FontAwesome name="star" size={16} />
       : <View className={ `h-4 w-4 rounded-lg border-2 border-black-500`} />
       }
