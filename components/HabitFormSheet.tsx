@@ -268,6 +268,12 @@ const HabitFormSheet = ({ sheet, dismiss, goal }: HabitFormSheetProps) => {
             renderItem={renderItem}
             showsHorizontalScrollIndicator={false}
             keyExtractor={ item => item.id }
+            onScrollToIndexFailed={info => {
+              const wait = new Promise(resolve => setTimeout(resolve, 500));
+              wait.then(() => {
+                flatListRef.current?.scrollToIndex({ index: info.index, animated: true });
+              });
+            }}
           />
           <View>
             <View className="flex flex-row items-center mt-4">

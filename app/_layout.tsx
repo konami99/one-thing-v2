@@ -5,10 +5,12 @@ import { AuthProvider, useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
 import { getUserData } from '../services/userService'
 import { LogBox } from 'react-native';
+import LogRocket from '@logrocket/react-native';
 import NetInfo from '@react-native-community/netinfo';
 import "../global.css"
 
 LogBox.ignoreLogs(['Warning: TNodeChildrenRenderer', 'Warning: MemoizedTNodeRenderer', 'Warning: TRenderEngineProvider']); // Ignore log notification by message
+LogRocket.init('lvfbtn/one-thing');
 
 const _layout = () => {
 	const [isConnected, setConnected] = useState(true);
@@ -50,6 +52,7 @@ const MainLayout = ()=>{
 		if (session) {
 			setAuth(session?.user);
 			updateUserData(session?.user); // update user like image, phone, bio
+			LogRocket.identify(session?.user.id)
 			router.replace("/(tabs)/home")
 		} else {
 			setAuth(null);
