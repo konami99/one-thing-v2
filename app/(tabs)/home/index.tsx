@@ -63,7 +63,7 @@ const Tab = () => {
         </View>
         <View className="flex flex-row justify-between">
           <Text>{ getCurrentMonth() }</Text>
-          <View className="flex flex-row justify-between w-[66%] mr-6">
+          <View className="flex flex-row w-[65%] justify-evenly">
             {currentWeekDates.map((date, index) => {
               const today = getToday().toString();
 
