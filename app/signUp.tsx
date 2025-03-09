@@ -65,7 +65,7 @@ const SignUp = () => {
 
           {/* welcome */}
           <View>
-            <Text style={styles.welcomeText}>Lets's </Text>
+            <Text style={styles.welcomeText}>Let's </Text>
             <Text style={styles.welcomeText}>Get Started</Text>
           </View>
 
